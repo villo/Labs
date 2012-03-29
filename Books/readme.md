@@ -36,14 +36,14 @@ However, using lazy pages is highly experimental, and may not work. Additionally
 Methods
 -------
 	
-	- pageName(string) - Changes the visible page to the given page name.
-	- pageNumber(number) - Changes the visible page to the given page number. 
-	- back() - Moves back to the previously viewed page.
-	- next() - Moves forward in the page stack. Will work after the "back" method is called.
+- pageName(string) - Changes the visible page to the given page name.
+- pageNumber(number) - Changes the visible page to the given page number. 
+- back() - Moves back to the previously viewed page.
+- next() - Moves forward in the page stack. Will work after the "back" method is called.
 
 Known Issues
 ------------
 
-	- The "back" method will not move back to the page viewed when the Book loads.
-	- The "pageNumber" method can break with lazy pages. The numbering system doesn't
-	- Lazy pages have owner problems, so calling methods in lazy pages might not work as expected.
+- The "back" method will not move back to the page viewed when the Book loads.
+- The "pageNumber" method can break with lazy pages. The numbering system doesn't
+- Lazy pages have owner problems, so calling methods in lazy pages might not work as expected.
