@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Books for Enyo 2</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			enyo.kind({
+				name: "BookTest",
+				kind: "Control",
+				components: [
+					{tag: "button", onclick: "changeView", content: "1", view: 1},
+					{tag: "button", onclick: "changeView", content: "2", view: 2},
+					{tag: "button", onclick: "changeView", content: "3", view: 3},
+					{tag: "button", onclick: "changeView", content: "4", view: 4},
+					{tag: "button", onclick: "back", content: "Back"},
+					{tag: "button", onclick: "next", content: "Next"},
+					{tag: "button", onclick: "lazyView", content: "Lazy"},
+					{kind: "Book", name: "Book", components: [
+						{name: "view1", tag: "h1", content: "sorta works 1"},
+						{name: "view2", tag: "h1", content: "sorta works 2"},
+						{name: "view3", tag: "h1", content: "sorta works 3"},
+						{name: "view4", tag: "h1", content: "sorta works 4"},
+						//Lazy pages must be called by name:
+						{kind: "testPage", name: "theLazyOne", lazy: true}
+					]},
+				],
+				
+				changeView: function(inSender){
+					this.$.Book.pageName("view" + inSender.view);
+				},
+				
+				back: function(){
+					this.$.Book.back();
+				},
+				
+				next: function(){
+					this.$.Book.next();
+				},
+				
+				lazyView: function(){
+					this.$.Book.pageName("theLazyOne");
+				}
+			});
+			
+			enyo.kind({
+				name: "testPage",
+				kind: "Control",
+				components: [
+					{tag: "h1", content: "Hello there! This was loaded lazely."}
+				],
+				create: function(){
+					this.inherited(arguments);
+					console.log("Loaded the lazy page.");
+				}
+			});
+		</script>
+	</body>
+</html>
