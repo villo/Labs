@@ -10,9 +10,11 @@ How to Use
 ----------
 
 Books works very similar to Panes. First, you create your Books container:
+
 	{kind: "Book"}
 
 Now you can add anything into the components block:
+
 	{kind: "Book", components: [
 	    {name: "pageOne", content: "Hello"},
 	    {name: "pageTwo", content: "Oh, why you changed the page!"}
