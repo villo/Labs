@@ -1,0 +1,148 @@
+/*
+ * FADE
+ */
+@-webkit-keyframes enyo-book-fade-in-animation {
+	from   { opacity: 0; display: block; }
+	to { opacity: 1; }
+}
+@-moz-keyframes enyo-book-fade-in-animation {
+	from   { opacity: 0; display: block; }
+	to { opacity: 1; }
+}
+@-ms-keyframes enyo-book-fade-in-animation {
+	from   { opacity: 0; display: block; }
+	to { opacity: 1; }
+}
+
+@-webkit-keyframes enyo-book-fade-out-animation {
+	from   { opacity: 1; }
+	to { opacity: 0; display: none; }
+}
+@-moz-keyframes enyo-book-fade-out-animation {
+	from   { opacity: 0; }
+	to { opacity: 0; display: none; }
+}
+@-ms-keyframes enyo-book-fade-out-animation {
+	from   { opacity: 0; }
+	to { opacity: 0; display: none; }
+}
+
+/*
+ * POP
+ */
+
+@-webkit-keyframes enyo-book-pop-in-animation {
+	from   { opacity: 0; display: block; -webkit-transform: scale(0.7); -moz-transform: scale(0.7); -ms-transform: scale(0.7); }
+	to { opacity: 1; -webkit-transform: scale(1); -moz-transform: scale(1); -ms-transform: scale(1); }
+}
+@-moz-keyframes enyo-book-pop-in-animation {
+	from   { opacity: 0; display: block; -webkit-transform: scale(0.7); -moz-transform: scale(0.7); -ms-transform: scale(0.7); }
+	to { opacity: 1; }
+}
+@-ms-keyframes enyo-book-pop-in-animation {
+	from   { opacity: 0; display: block; -webkit-transform: scale(0.7); -moz-transform: scale(0.7); -ms-transform: scale(0.7); }
+	to { opacity: 1;}
+}
+
+@-webkit-keyframes enyo-book-pop-out-animation {
+	from   { opacity: 1; }
+	to { opacity: 0; display: none; -webkit-transform: scale(1.3); -moz-transform: scale(1.3); -ms-transform: scale(1.3); }
+}
+@-moz-keyframes enyo-book-pop-out-animation {
+	from   { opacity: 0; }
+	to { opacity: 0; display: none; -webkit-transform: scale(1.3); -moz-transform: scale(1.3); -ms-transform: scale(1.3); }
+}
+@-ms-keyframes enyo-book-pop-out-animation {
+	from   { opacity: 0; }
+	to { opacity: 0; display: none; -webkit-transform: scale(1.3); -moz-transform: scale(1.3); -ms-transform: scale(1.3); }
+}
+
+
+.enyo-book-fade-in {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-fade-in-animation;
+	-moz-animation-name: enyo-book-fade-in-animation;
+	-ms-animation-name: enyo-book-fade-in-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+.enyo-book-fade-out {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-fade-out-animation;
+	-moz-animation-name: enyo-book-fade-out-animation;
+	-ms-animation-name: enyo-book-fade-out-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+
+.enyo-book-pop-in {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-pop-in-animation;
+	-moz-animation-name: enyo-book-pop-in-animation;
+	-ms-animation-name: enyo-book-pop-in-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+.enyo-book-pop-out {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-pop-out-animation;
+	-moz-animation-name: enyo-book-pop-out-animation;
+	-ms-animation-name: enyo-book-pop-out-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+.enyo-book-simple-in {
+	opacity: 1;
+	display: block;
+}
+
+.enyo-book-simple-out {
+	display: none;
+}
+
+/*
+ * Pages should appear over eachother, and we do this through applying this to all pages:
+ */
+.enyo-page {
+	position: absolute;
+}

@@ -1,4 +1,5 @@
 enyo.depends(
 	"book.js",
-	"page.js"
+	"page.js",
+	"book.css"
 );

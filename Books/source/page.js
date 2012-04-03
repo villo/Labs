@@ -4,5 +4,6 @@
 
 enyo.kind({
 	name: "Page",
-	kind: "Control"
+	kind: "Control",
+	classes: "enyo-page"
 });

@@ -39,7 +39,7 @@ enyo.kind({
 
 enyo.kind({
 	name: "testPage",
-	kind: "Control",
+	kind: "Page",
 	components: [
 		{tag: "h1", content: "Hello there! This was loaded lazely."}
 	],
