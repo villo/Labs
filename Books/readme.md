@@ -55,6 +55,20 @@ Methods
 - back() - Moves back to the previously viewed page.
 - next() - Moves forward in the page stack. Will work after the "back" method is called.
 
+Helpful Snippets
+-------
+
+In your "Page" kind, you can use this code to signal an "activate" event for that page.
+	
+	showingChanged: function(previousValue) {
+		this.inherited(arguments);
+
+		if(this.getShowing() && previousValue !== undefined){
+			//ACTIVATED
+			console.log("activated");
+		}
+	}
+
 Known Issues
 ------------
 
