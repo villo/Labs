@@ -267,7 +267,15 @@ enyo.kind({
 				
 			var c = this.getControls()[number];
 			c.show();
-			c.addClass("enyo-book-" + this.transition + "-in");
+			if(this.transition != "slade"){
+				c.addClass("enyo-book-" + this.transition + "-in");
+			}else{
+				if(this.direction == "next"){
+					c.addClass("enyo-book-sladenext-in");
+				}else{
+					c.addClass("enyo-book-sladeback-in");
+				}
+			}
 			
 			this.pane = number;
 			if(history !== true){
@@ -279,7 +287,15 @@ enyo.kind({
 			
 			window.setTimeout(enyo.bind(this, function(){
 				c.show();
-				c.removeClass("enyo-book-" + this.transition + "-in");
+				if(this.transition != "slade"){
+					c.removeClass("enyo-book-" + this.transition + "-in");
+				}else{
+					if(this.direction == "next"){
+						c.removeClass("enyo-book-sladenext-in");
+					}else{
+						c.removeClass("enyo-book-sladeback-in");
+					}
+				}
 				this._end();
 			}), this.transitions[this.transition]);
 		}
@@ -292,10 +308,27 @@ enyo.kind({
 				this.transitioning = true;
 				
 			var c = this.getControls()[number];
-			c.addClass("enyo-book-" + this.transition + "-out");
+			if(this.transition != "slade"){
+				c.addClass("enyo-book-" + this.transition + "-out");
+			}else{
+				if(this.direction == "next"){
+					c.addClass("enyo-book-sladenext-out");
+				}else{
+					c.addClass("enyo-book-sladeback-out");
+				}
+			}
+			
 			window.setTimeout(enyo.bind(this, function(){
 				c.hide();
-				c.removeClass("enyo-book-" + this.transition + "-out");
+				if(this.transition != "slade"){
+					c.removeClass("enyo-book-" + this.transition + "-out");
+				}else{
+					if(this.direction == "next"){
+						c.removeClass("enyo-book-sladenext-out");
+					}else{
+						c.removeClass("enyo-book-sladeback-out");
+					}
+				}
 				this._end();
 			}), this.transitions[this.transition]);
 		}
