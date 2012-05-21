@@ -25,7 +25,7 @@ enyo.kind({
 	name: "Book",
 	kind: "Control",
 	published: {
-		//"fade", "simple", "pop"
+		//"fade", "slade", "simple", "pop"
 		transition: "fade",
 		//allow for an action cue that processes input while still animating. This also makes animations go one at a time.
 		cue: false,
@@ -37,6 +37,7 @@ enyo.kind({
 		//Timing for transition properties.
 		"simple": 0,
 		"fade": 500,
+		"slade": 500,
 		"pop": 500
 	},
 	/*
@@ -47,6 +48,11 @@ enyo.kind({
 	 * Same thing as transitioning, but a level up.
 	 */
 	movementing: false,
+	/*
+	 * Transition direction for slade
+	 * "back", "next"
+	 */
+	direction: "next",
 	defaultKind: "Page",
 	create: function(){
 		if(this.absolute === false){
@@ -98,6 +104,11 @@ enyo.kind({
 		this.inherited(arguments);
 	},
 	pageNumber: function(number){
+		if(this.pane < number) {
+			this.direction = "next";
+		}else{
+			this.direction = "back";
+		}
 		if(this.pane !== number){
 			if(this.movementing){
 				if(this.cue){
@@ -114,6 +125,11 @@ enyo.kind({
 		}
 	},
 	pageName: function(name){
+		if(this.pane < this._getPageNumber(name)) {
+			this.direction = "next";
+		}else{
+			this.direction = "back";
+		}
 		if(this.movementing){
 			if(this.cue){
 				this._cue.push({
@@ -145,6 +161,7 @@ enyo.kind({
 	},
 	
 	back: function(){
+		this.direction = "back";
 		if(this.movementing){
 			if(this.cue){
 				this._cue.push({
@@ -162,6 +179,7 @@ enyo.kind({
 		}
 	},
 	next: function(){
+		this.direction = "next";
 		if(this.movementing){
 			if(this.cue){
 				this._cue.push({
@@ -249,7 +267,15 @@ enyo.kind({
 				
 			var c = this.getControls()[number];
 			c.show();
-			c.addClass("enyo-book-" + this.transition + "-in");
+			if(this.transition != "slade"){
+				c.addClass("enyo-book-" + this.transition + "-in");
+			}else{
+				if(this.direction == "next"){
+					c.addClass("enyo-book-sladenext-in");
+				}else{
+					c.addClass("enyo-book-sladeback-in");
+				}
+			}
 			
 			this.pane = number;
 			if(history !== true){
@@ -261,7 +287,15 @@ enyo.kind({
 			
 			window.setTimeout(enyo.bind(this, function(){
 				c.show();
-				c.removeClass("enyo-book-" + this.transition + "-in");
+				if(this.transition != "slade"){
+					c.removeClass("enyo-book-" + this.transition + "-in");
+				}else{
+					if(this.direction == "next"){
+						c.removeClass("enyo-book-sladenext-in");
+					}else{
+						c.removeClass("enyo-book-sladeback-in");
+					}
+				}
 				this._end();
 			}), this.transitions[this.transition]);
 		}
@@ -274,10 +308,27 @@ enyo.kind({
 				this.transitioning = true;
 				
 			var c = this.getControls()[number];
-			c.addClass("enyo-book-" + this.transition + "-out");
+			if(this.transition != "slade"){
+				c.addClass("enyo-book-" + this.transition + "-out");
+			}else{
+				if(this.direction == "next"){
+					c.addClass("enyo-book-sladenext-out");
+				}else{
+					c.addClass("enyo-book-sladeback-out");
+				}
+			}
+			
 			window.setTimeout(enyo.bind(this, function(){
 				c.hide();
-				c.removeClass("enyo-book-" + this.transition + "-out");
+				if(this.transition != "slade"){
+					c.removeClass("enyo-book-" + this.transition + "-out");
+				}else{
+					if(this.direction == "next"){
+						c.removeClass("enyo-book-sladenext-out");
+					}else{
+						c.removeClass("enyo-book-sladeback-out");
+					}
+				}
 				this._end();
 			}), this.transitions[this.transition]);
 		}
