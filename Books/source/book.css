@@ -57,6 +57,36 @@
 	to { opacity: 0; display: none; -webkit-transform: scale(1.3); -moz-transform: scale(1.3); -ms-transform: scale(1.3); }
 }
 
+/*
+ * SLADE
+ */
+ 
+@-webkit-keyframes enyo-book-slade-in-animation {
+	from   { opacity: 0; -webkit-transform: translate(100%,0%); -moz-transform: translate(100%,0%); -ms-transform: translate(100%,0%); display: block; }
+	to { opacity: 1; -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+@-moz-keyframes enyo-book-slade-in-animation {
+	from   { opacity: 0; -webkit-transform: translate(100%,0%); -moz-transform: translate(100%,0%); -ms-transform: translate(100%,0%); display: block; }
+	to { opacity: 1; -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+@-ms-keyframes enyo-book-slade-in-animation {
+	from   { opacity: 0; -webkit-transform: translate(100%,0%); -moz-transform: translate(100%,0%); -ms-transform: translate(100%,0%); display: block; }
+	to { opacity: 1; -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+
+@-webkit-keyframes enyo-book-slade-out-animation {
+	from   { opacity: 1; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { opacity: 0; -webkit-transform: translate(-100%, 0%); -moz-transform: translate(-100%, 0%); -ms-transform: translate(-100%, 0%); display: none; }
+}
+@-moz-keyframes enyo-book-slade-out-animation {
+	from   { opacity: 1; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { opacity: 0; -webkit-transform: translate(-100%, 0%); -moz-transform: translate(-100%, 0%); -ms-transform: translate(-100%, 0%); display: none; }
+}
+@-ms-keyframes enyo-book-slade-out-animation {
+	from   { opacity: 1; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { opacity: 0; -webkit-transform: translate(-100%, 0%); -moz-transform: translate(-100%, 0%); -ms-transform: translate(-100%, 0%); display: none; }
+}
+
 
 .enyo-book-fade-in {
 	-webkit-animation-duration: 0.5s;
@@ -121,6 +151,43 @@
 	-webkit-animation-name: enyo-book-pop-out-animation;
 	-moz-animation-name: enyo-book-pop-out-animation;
 	-ms-animation-name: enyo-book-pop-out-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+
+.enyo-book-slade-in {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-slade-in-animation;
+	-moz-animation-name: enyo-book-slade-in-animation;
+	-ms-animation-name: enyo-book-slade-in-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+.enyo-book-slade-out {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-slade-out-animation;
+	-moz-animation-name: enyo-book-slade-out-animation;
+	-ms-animation-name: enyo-book-slade-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
