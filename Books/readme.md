@@ -56,9 +56,9 @@ Methods
 - next() - Moves forward in the page stack. Will work after the "back" method is called.
 
 Helpful Snippets
--------
+----------------
 
-In your "Page" kind, you can use this code to signal an "activate" event for that page.
+In your "Page" kind, you can use this code to signal an "activate" event for that page. In the future, an event will be passed to the page, but for now, this will work.
 	
 	showingChanged: function(previousValue) {
 		this.inherited(arguments);
@@ -68,6 +68,8 @@ In your "Page" kind, you can use this code to signal an "activate" event for tha
 			console.log("activated");
 		}
 	}
+
+If you wish for your content to fit to its container, simply add "enyo-fit" to the classes property of the page.
 
 Known Issues
 ------------

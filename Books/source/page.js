@@ -5,5 +5,5 @@
 enyo.kind({
 	name: "Page",
 	kind: "Control",
-	classes: "enyo-page enyo-fit"
+	classes: "enyo-page"
 });
