@@ -25,7 +25,7 @@ enyo.kind({
 	name: "Book",
 	kind: "Control",
 	published: {
-		//"fade", "slade", "simple", "pop"
+		//"fade", "slide", "slade", "simple", "pop"
 		transition: "fade",
 		//allow for an action cue that processes input while still animating. This also makes animations go one at a time.
 		cue: false,
@@ -37,6 +37,7 @@ enyo.kind({
 		//Timing for transition properties.
 		"simple": 0,
 		"fade": 500,
+		"slide": 500,
 		"slade": 500,
 		"pop": 500
 	},
@@ -52,6 +53,7 @@ enyo.kind({
 	 * Transition direction for slade
 	 * "back", "next"
 	 */
+	directional: false,
 	direction: "next",
 	defaultKind: "Page",
 	create: function(){
@@ -67,6 +69,8 @@ enyo.kind({
 		//OP
 		this.history = [];
 		this.historyPane = null;
+		if(this.transition == "slide" || this.transition == "slade") this.directional = true;
+		enyo.log(this.directional);
 		this.inherited(arguments);
 		
 		// Make all of the Pages invisible to start out with.
@@ -267,13 +271,13 @@ enyo.kind({
 				
 			var c = this.getControls()[number];
 			c.show();
-			if(this.transition != "slade"){
+			if(this.directional != true){
 				c.addClass("enyo-book-" + this.transition + "-in");
 			}else{
 				if(this.direction == "next"){
-					c.addClass("enyo-book-sladenext-in");
+					c.addClass("enyo-book-" + this.transition + "next-in");
 				}else{
-					c.addClass("enyo-book-sladeback-in");
+					c.addClass("enyo-book-" + this.transition + "back-in");
 				}
 			}
 			
@@ -287,13 +291,13 @@ enyo.kind({
 			
 			window.setTimeout(enyo.bind(this, function(){
 				c.show();
-				if(this.transition != "slade"){
+				if(this.directional != true){
 					c.removeClass("enyo-book-" + this.transition + "-in");
 				}else{
 					if(this.direction == "next"){
-						c.removeClass("enyo-book-sladenext-in");
+						c.removeClass("enyo-book-" + this.transition + "next-in");
 					}else{
-						c.removeClass("enyo-book-sladeback-in");
+						c.removeClass("enyo-book-" + this.transition + "back-in");
 					}
 				}
 				this._end();
@@ -308,25 +312,25 @@ enyo.kind({
 				this.transitioning = true;
 				
 			var c = this.getControls()[number];
-			if(this.transition != "slade"){
+			if(this.directional != true){
 				c.addClass("enyo-book-" + this.transition + "-out");
 			}else{
 				if(this.direction == "next"){
-					c.addClass("enyo-book-sladenext-out");
+					c.addClass("enyo-book-" + this.transition + "next-out");
 				}else{
-					c.addClass("enyo-book-sladeback-out");
+					c.addClass("enyo-book-" + this.transition + "back-out");
 				}
 			}
 			
 			window.setTimeout(enyo.bind(this, function(){
 				c.hide();
-				if(this.transition != "slade"){
+				if(this.directional != true){
 					c.removeClass("enyo-book-" + this.transition + "-out");
 				}else{
 					if(this.direction == "next"){
-						c.removeClass("enyo-book-sladenext-out");
+						c.removeClass("enyo-book-" + this.transition + "next-out");
 					}else{
-						c.removeClass("enyo-book-sladeback-out");
+						c.removeClass("enyo-book-" + this.transition + "back-out");
 					}
 				}
 				this._end();

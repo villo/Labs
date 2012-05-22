@@ -58,6 +58,62 @@
 }
 
 /*
+ * SLIDE
+ */
+ /* next */
+@-webkit-keyframes enyo-book-slidenext-in-animation {
+	from   { -webkit-transform: translate(100%,0%); -moz-transform: translate(100%,0%); -ms-transform: translate(100%,0%); display: block; }
+	to { -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+@-moz-keyframes enyo-book-slidenext-in-animation {
+	from   { -webkit-transform: translate(100%,0%); -moz-transform: translate(100%,0%); -ms-transform: translate(100%,0%); display: block; }
+	to { -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+@-ms-keyframes enyo-book-slidenext-in-animation {
+	from   { -webkit-transform: translate(100%,0%); -moz-transform: translate(100%,0%); -ms-transform: translate(100%,0%); display: block; }
+	to { -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+
+@-webkit-keyframes enyo-book-slidenext-out-animation {
+	from   { -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { -webkit-transform: translate(-100%, 0%); -moz-transform: translate(-100%, 0%); -ms-transform: translate(-100%, 0%); display: none; }
+}
+@-moz-keyframes enyo-book-slidenext-out-animation {
+	from   { -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { -webkit-transform: translate(-100%, 0%); -moz-transform: translate(-100%, 0%); -ms-transform: translate(-100%, 0%); display: none; }
+}
+@-ms-keyframes enyo-book-slidenext-out-animation {
+	from   { -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { -webkit-transform: translate(-100%, 0%); -moz-transform: translate(-100%, 0%); -ms-transform: translate(-100%, 0%); display: none; }
+}
+ /* back */
+@-webkit-keyframes enyo-book-slideback-in-animation {
+	from   { -webkit-transform: translate(-100%,0%); -moz-transform: translate(-100%,0%); -ms-transform: translate(-100%,0%); display: block; }
+	to { -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+@-moz-keyframes enyo-book-slideback-in-animation {
+	from   { -webkit-transform: translate(-100%,0%); -moz-transform: translate(-100%,0%); -ms-transform: translate(-100%,0%); display: block; }
+	to { -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+@-ms-keyframes enyo-book-slideback-in-animation {
+	from   { -webkit-transform: translate(-100%,0%); -moz-transform: translate(-100%,0%); -ms-transform: translate(-100%,0%); display: block; }
+	to { -webkit-transform: translate(0%,0%); -moz-transform: translate(0%,0%); -ms-transform: translate(0%,0%); }
+}
+
+@-webkit-keyframes enyo-book-slideback-out-animation {
+	from   { -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { -webkit-transform: translate(100%, 0%); -moz-transform: translate(100%, 0%); -ms-transform: translate(100%, 0%); display: none; }
+}
+@-moz-keyframes enyo-book-slideback-out-animation {
+	from   { -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { -webkit-transform: translate(100%, 0%); -moz-transform: translate(100%, 0%); -ms-transform: translate(100%, 0%); display: none; }
+}
+@-ms-keyframes enyo-book-slideback-out-animation {
+	from   { -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); }
+	to { -webkit-transform: translate(100%, 0%); -moz-transform: translate(100%, 0%); -ms-transform: translate(100%, 0%); display: none; }
+}
+
+/*
  * SLADE
  */
  /* next */
@@ -177,6 +233,79 @@
 	-webkit-animation-name: enyo-book-pop-out-animation;
 	-moz-animation-name: enyo-book-pop-out-animation;
 	-ms-animation-name: enyo-book-pop-out-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+
+.enyo-book-slidenext-in {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-slidenext-in-animation;
+	-moz-animation-name: enyo-book-slidenext-in-animation;
+	-ms-animation-name: enyo-book-slidenext-in-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+.enyo-book-slidenext-out {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-slidenext-out-animation;
+	-moz-animation-name: enyo-book-slidenext-out-animation;
+	-ms-animation-name: enyo-book-slidenext-out-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+.enyo-book-slideback-in {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-slideback-in-animation;
+	-moz-animation-name: enyo-book-slideback-in-animation;
+	-ms-animation-name: enyo-book-slideback-in-animation;
+	
+	-webkit-animation-direction: normal;
+	-moz-animation-direction: normal;
+	-ms-animation-direction: normal;
+	
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+}
+
+.enyo-book-slideback-out {
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	
+	-webkit-animation-name: enyo-book-slideback-out-animation;
+	-moz-animation-name: enyo-book-slideback-out-animation;
+	-ms-animation-name: enyo-book-slideback-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
