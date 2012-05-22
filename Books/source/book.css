@@ -9,6 +9,10 @@
 	from   { opacity: 0; display: block; }
 	to { opacity: 1; }
 }
+@-o-keyframes enyo-book-fade-in-animation {
+	from   { opacity: 0; display: block; }
+	to { opacity: 1; }
+}
 @-ms-keyframes enyo-book-fade-in-animation {
 	from   { opacity: 0; display: block; }
 	to { opacity: 1; }
@@ -19,6 +23,10 @@
 	to { opacity: 0; display: none; }
 }
 @-moz-keyframes enyo-book-fade-out-animation {
+	from   { opacity: 0; }
+	to { opacity: 0; display: none; }
+}
+@-o-keyframes enyo-book-fade-out-animation {
 	from   { opacity: 0; }
 	to { opacity: 0; display: none; }
 }
@@ -39,6 +47,10 @@
 	from   { opacity: 0; display: block; -moz-transform: scale(0.7); }
 	to { opacity: 1; }
 }
+@-o-keyframes enyo-book-pop-in-animation {
+	from   { opacity: 0; display: block; -o-transform: scale(0.7); }
+	to { opacity: 1; }
+}
 @-ms-keyframes enyo-book-pop-in-animation {
 	from   { opacity: 0; display: block; -ms-transform: scale(0.7); }
 	to { opacity: 1; }
@@ -51,6 +63,10 @@
 @-moz-keyframes enyo-book-pop-out-animation {
 	from   { opacity: 0; }
 	to { opacity: 0; display: none; -moz-transform: scale(1.3); }
+}
+@-o-keyframes enyo-book-pop-out-animation {
+	from   { opacity: 0; }
+	to { opacity: 0; display: none; -o-transform: scale(1.3); }
 }
 @-ms-keyframes enyo-book-pop-out-animation {
 	from   { opacity: 0; }
@@ -69,6 +85,10 @@
 	from   { -moz-transform: translate(100%,0%); display: block; }
 	to { -moz-transform: translate(0%,0%); }
 }
+@-o-keyframes enyo-book-slidenext-in-animation {
+	from   { -o-transform: translate(100%,0%); display: block; }
+	to { -o-transform: translate(0%,0%); }
+}
 @-ms-keyframes enyo-book-slidenext-in-animation {
 	from   { -ms-transform: translate(100%,0%); display: block; }
 	to { -ms-transform: translate(0%,0%); }
@@ -81,6 +101,10 @@
 @-moz-keyframes enyo-book-slidenext-out-animation {
 	from   { -moz-transform: translate(0%, 0%); }
 	to { -moz-transform: translate(-100%, 0%); }
+}
+@-o-keyframes enyo-book-slidenext-out-animation {
+	from   { -o-transform: translate(0%, 0%); }
+	to { -o-transform: translate(-100%, 0%); }
 }
 @-ms-keyframes enyo-book-slidenext-out-animation {
 	from   { -ms-transform: translate(0%, 0%); }
@@ -95,6 +119,10 @@
 	from   { -moz-transform: translate(-100%,0%); display: block; }
 	to { -moz-transform: translate(0%,0%); }
 }
+@-o-keyframes enyo-book-slideback-in-animation {
+	from   { -o-transform: translate(-100%,0%); display: block; }
+	to { -o-transform: translate(0%,0%); }
+}
 @-ms-keyframes enyo-book-slideback-in-animation {
 	from   { -ms-transform: translate(-100%,0%); display: block; }
 	to { -ms-transform: translate(0%,0%); }
@@ -107,6 +135,10 @@
 @-moz-keyframes enyo-book-slideback-out-animation {
 	from   { -moz-transform: translate(0%, 0%); }
 	to { -moz-transform: translate(100%, 0%); display: none; }
+}
+@-o-keyframes enyo-book-slideback-out-animation {
+	from   { -o-transform: translate(0%, 0%); }
+	to { -o-transform: translate(100%, 0%); display: none; }
 }
 @-ms-keyframes enyo-book-slideback-out-animation {
 	from   { -ms-transform: translate(0%, 0%); }
@@ -125,6 +157,10 @@
 	from   { opacity: 0; -moz-transform: translate(50%,0%); display: block; }
 	to { opacity: 1; -moz-transform: translate(0%,0%); }
 }
+@-o-keyframes enyo-book-sladenext-in-animation {
+	from   { opacity: 0; -o-transform: translate(50%,0%); display: block; }
+	to { opacity: 1; -o-transform: translate(0%,0%); }
+}
 @-ms-keyframes enyo-book-sladenext-in-animation {
 	from   { opacity: 0; -ms-transform: translate(50%,0%); display: block; }
 	to { opacity: 1; -ms-transform: translate(0%,0%); }
@@ -138,9 +174,13 @@
 	from   { opacity: 1; -moz-transform: translate(0%, 0%); }
 	to { opacity: 0; -moz-transform: translate(-50%, 0%); display: none; }
 }
+@-o-keyframes enyo-book-sladenext-out-animation {
+	from   { opacity: 1; -o-transform: translate(0%, 0%); }
+	to { opacity: 0; -o-transform: translate(-50%, 0%); display: none; }
+}
 @-ms-keyframes enyo-book-sladenext-out-animation {
-	from   { -ms-transform: translate(0%, 0%); }
-	to { -ms-transform: translate(-50%, 0%); display: none; }
+	from   { opacity: 1; -ms-transform: translate(0%, 0%); }
+	to { opacity: 0; -ms-transform: translate(-50%, 0%); display: none; }
 }
  /* back */
 @-webkit-keyframes enyo-book-sladeback-in-animation {
@@ -150,6 +190,10 @@
 @-moz-keyframes enyo-book-sladeback-in-animation {
 	from   { opacity: 0; -moz-transform: translate(-50%,0%); display: block; }
 	to { opacity: 1; -moz-transform: translate(0%,0%); }
+}
+@-o-keyframes enyo-book-sladeback-in-animation {
+	from   { opacity: 0; -o-transform: translate(-50%,0%); display: block; }
+	to { opacity: 1; -o-transform: translate(0%,0%); }
 }
 @-ms-keyframes enyo-book-sladeback-in-animation {
 	from   { opacity: 0; -ms-transform: translate(-50%,0%); display: block; }
@@ -164,6 +208,10 @@
 	from   { opacity: 1; -moz-transform: translate(0%, 0%); }
 	to { opacity: 0; -moz-transform: translate(50%, 0%); display: none; }
 }
+@-o-keyframes enyo-book-sladeback-in-animation {
+	from   { opacity: 0; -o-transform: translate(-50%,0%); display: block; }
+	to { opacity: 1; -o-transform: translate(0%,0%); }
+}
 @-ms-keyframes enyo-book-sladeback-out-animation {
 	from   { opacity: 1; -ms-transform: translate(0%, 0%); }
 	to { opacity: 0; -ms-transform: translate(50%, 0%); display: none; }
@@ -173,36 +221,44 @@
 .enyo-book-fade-in {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-fade-in-animation;
 	-moz-animation-name: enyo-book-fade-in-animation;
+	-o-animation-name: enyo-book-fade-in-animation;
 	-ms-animation-name: enyo-book-fade-in-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-fade-out {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-fade-out-animation;
 	-moz-animation-name: enyo-book-fade-out-animation;
+	-o-animation-name: enyo-book-fade-out-animation;
 	-ms-animation-name: enyo-book-fade-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
@@ -210,36 +266,44 @@
 .enyo-book-pop-in {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-pop-in-animation;
 	-moz-animation-name: enyo-book-pop-in-animation;
+	-o-animation-name: enyo-book-pop-in-animation;
 	-ms-animation-name: enyo-book-pop-in-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-pop-out {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-pop-out-animation;
 	-moz-animation-name: enyo-book-pop-out-animation;
+	-o-animation-name: enyo-book-pop-out-animation;
 	-ms-animation-name: enyo-book-pop-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
@@ -247,72 +311,88 @@
 .enyo-book-slidenext-in {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-slidenext-in-animation;
 	-moz-animation-name: enyo-book-slidenext-in-animation;
+	-o-animation-name: enyo-book-slidenext-in-animation;
 	-ms-animation-name: enyo-book-slidenext-in-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-slidenext-out {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-slidenext-out-animation;
 	-moz-animation-name: enyo-book-slidenext-out-animation;
+	-o-animation-name: enyo-book-slidenext-out-animation;
 	-ms-animation-name: enyo-book-slidenext-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-slideback-in {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-slideback-in-animation;
 	-moz-animation-name: enyo-book-slideback-in-animation;
+	-o-animation-name: enyo-book-slideback-in-animation;
 	-ms-animation-name: enyo-book-slideback-in-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-slideback-out {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-slideback-out-animation;
 	-moz-animation-name: enyo-book-slideback-out-animation;
+	-o-animation-name: enyo-book-slideback-out-animation;
 	-ms-animation-name: enyo-book-slideback-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
@@ -320,72 +400,88 @@
 .enyo-book-sladenext-in {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-sladenext-in-animation;
 	-moz-animation-name: enyo-book-sladenext-in-animation;
+	-o-animation-name: enyo-book-sladenext-in-animation;
 	-ms-animation-name: enyo-book-sladenext-in-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-sladenext-out {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-sladenext-out-animation;
 	-moz-animation-name: enyo-book-sladenext-out-animation;
+	-o-animation-name: enyo-book-sladenext-out-animation;
 	-ms-animation-name: enyo-book-sladenext-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-sladeback-in {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-sladeback-in-animation;
 	-moz-animation-name: enyo-book-sladeback-in-animation;
+	-o-animation-name: enyo-book-sladeback-in-animation;
 	-ms-animation-name: enyo-book-sladeback-in-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
 .enyo-book-sladeback-out {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
 	-ms-animation-duration: 0.5s;
 	
 	-webkit-animation-name: enyo-book-sladeback-out-animation;
 	-moz-animation-name: enyo-book-sladeback-out-animation;
+	-o-animation-name: enyo-book-sladeback-out-animation;
 	-ms-animation-name: enyo-book-sladeback-out-animation;
 	
 	-webkit-animation-direction: normal;
 	-moz-animation-direction: normal;
+	-o-animation-direction: normal;
 	-ms-animation-direction: normal;
 	
 	-webkit-animation-fill-mode: forwards;
 	-moz-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
 	-ms-animation-fill-mode: forwards;
 }
 
