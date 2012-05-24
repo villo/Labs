@@ -24,6 +24,7 @@
 enyo.kind({
 	name: "Book",
 	kind: "Control",
+	classes: "enyo-book",
 	published: {
 		//"fade", "slide", "slade", "simple", "pop"
 		transition: "fade",

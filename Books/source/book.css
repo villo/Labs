@@ -496,6 +496,13 @@
 }
 
 /*
+ * Pages should stay inside the book div during slide/slade transitions
+ */
+.enyo-book {
+ 	overflow: hidden;
+}
+
+/*
  * Pages should appear over eachother, and we do this through applying this to all pages:
  */
 .enyo-page {
