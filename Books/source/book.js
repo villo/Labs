@@ -71,7 +71,6 @@ enyo.kind({
 		this.history = [];
 		this.historyPane = null;
 		if(this.transition == "slide" || this.transition == "slade") this.directional = true;
-		enyo.log(this.directional);
 		this.inherited(arguments);
 		
 		// Make all of the Pages invisible to start out with.
