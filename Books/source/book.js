@@ -264,8 +264,9 @@ enyo.kind({
 	},
 	
 	startAnimation: function(panes){
+		//We are moving:
+		this.movementing = true;
 		
-		//REAL: FIXME
 		var c = this.getControls();
 		this._showingPane = c[panes.show];
 		this._hidingPane = c[panes.hide];
@@ -351,11 +352,8 @@ enyo.kind({
 		if(this.pane !== number){
 			if(this.movementing){
 				
-			}else{
-				this.movementing = true;
-				
+			}else{	
 				this.startAnimation({"show": number, "hide": this.pane});
-				
 			}
 		}
 	},
@@ -370,7 +368,6 @@ enyo.kind({
 		if(this.movementing){
 			//Do nothing.
 		}else{
-			this.movementing = true;
 			/*
 			 * Check for lazy pages.
 			 */
