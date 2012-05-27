@@ -58,44 +58,31 @@ enyo.kind({
 					 "index": index || ""
 				}
 			});
-		}else{
-			if(this.cue){
-				this.transitioning = true;
-			}
-			
-			var c = this.getControls()[number];
-			
-			c.show();
-			if(this.transition != "slade"){
-				c.addClass("enyo-book-" + this.transition + "-in");
-			}else{
-				if(this.direction == "next"){
-					c.addClass("enyo-book-sladenext-in");
-				}else{
-					c.addClass("enyo-book-sladeback-in");
-				}
-			}
-			
-			this.pane = number;
-			if(history !== true){
-				this.history.push(this.pane);
-				this.historyPane = this.history.length-1;
-			}else{
-				this.historyPane = index;
-			}
+			return;
 		}
 		
+		if(this.cue){
+			this.transitioning = true;
+		}
 		
 		//REAL: FIXME
 		var c = this.getControls();
 		this._showingPane = c[panes.show];
 		this._hidingPane = c[panes.hide];
 		
-		var t = enyo.Book.transitions[this.transition];
-		
-		if(t.easing){
-			this.$.theAnimationMachineForBook.setEasingFunction(t.easing);
+		this.pane = panes.show;
+		if(panes.history && panes.history === false){
+			//No history
+		}else{
+			this.history.push(this.pane);
+			this.historyPane = this.history.length-1;
 		}
+		
+		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
+		
+		
+		this.$.theAnimationMachineForBook.setEasingFunction(t.easing || enyo.easing.linear);
+		
 		this.$.theAnimationMachineForBook.setDuration(t.transition.duration || 500);
 		
 		this._showingPane.show();
@@ -132,6 +119,10 @@ enyo.kind({
 				//Import transition properties:
 				t.transition = inSender.transition;
 				
+				//enyo.Animator messes things up if the duration is 0, so we set it to 1 ms.
+				//NOTE: If you're using a 0ms transition, you're better off just setting before/after properties.
+				t.transition.duration === 0 ? t.transition.duration = 1 : "";
+				
 				if(inSender.auto && inSender.auto === true){
 					if(t.directional){
 						//Handle directional transitions:
@@ -153,8 +144,6 @@ enyo.kind({
 								}else if(typeof(objV[x]) === "string" && objV[x].charAt(objV[x].length-1) === "%"){
 									use = true;
 									percent = true;
-								}else{
-									return false;
 								}
 								
 								if(use === true){
@@ -168,7 +157,6 @@ enyo.kind({
 					}
 					
 					var differences = buildDifferences(t.transition.visible, t.transition.hidden);
-					
 					/*
 					 * For numbers:
 					 * ------------
@@ -179,41 +167,34 @@ enyo.kind({
 					
 					//TODO: Adjust for directional transitions:
 					var moveThrough = t.transition;
-					
 					t.step = function(controls, inSender){
-						
 						for(var x in differences){
 							if(differences.hasOwnProperty(x)){
 								if(x === "transform"){
-									//Run this on the transform properties:
+									var d = differences[x];
+									for(var y in d){
+										if(d.hasOwnProperty(y)){
+											var show = (1 - inSender.value)*d[y];
+											var hide = inSender.value*d[y];
+											
+											enyo.dom.transformValue(controls.show, y, moveThrough.visible.transform[y] - show);
+											enyo.dom.transformValue(controls.hide, y, moveThrough.visible.transform[y] - hide);
+										}
+									}
 								}else{
 									//TODO: Percents:
+									if(typeof(differences[x]) === "string" && differences[x].charAt(visible[x].length-1) === "%"){}
 									var show = (1 - inSender.value)*differences[x];
 									var hide = inSender.value*differences[x];
 									
 									controls.show.applyStyle(x, moveThrough.visible[x] - show);
 									controls.hide.applyStyle(x, moveThrough.visible[x] - hide);
-									/*
-									if(typeof(differences[x] === "number")){
-										//Automatic numerical parsing:
-										
-									}else if(typeof(differences[x]) === "string" && differences[x].charAt(visible[x].length-1) === "%"){
-										//Percents are numbers:
-										
-									}
-									*/
-									//control.applyStyle(x, visible[x]);
 								}
 							}
 						}
-						/*
-						if(true){
-							enyo.dom.transformValue(this.$.slidingThing, "translate", x + "," + y);
-						}
-						*/
 					}
 				}else{
-					
+					//TODO
 				}
 				
 				enyo.Book.transitions[name] = t;
@@ -478,8 +459,9 @@ enyo.kind({
 		if(this.transitioning){
 			this._cue.push({"action": "_hidePane", "arguments": number});
 		}else{
-			if(this.cue)
+			if(this.cue){
 				this.transitioning = true;
+			}
 				
 			var c = this.getControls()[number];
 			if(this.transition != "slade"){

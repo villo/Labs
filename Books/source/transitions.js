@@ -3,7 +3,7 @@ enyo.Book.transition({
 	name: "simple",
 	auto: true,
 	transition: {
-		duration: 0,
+		duration: 1,
 		visible: {
 			opacity: 1,
 			display: "block"
@@ -35,11 +35,9 @@ enyo.Book.transition({
 enyo.Book.transition({
 	name: "pop",
 	auto: true,
+	easing: enyo.quadInOut,
 	transition: {
 		duration: 500,
-		//Styles to apply before and after the transition:
-		before: {},
-		after: {},
 		//Transitions properties:
 		visible: {
 			opacity: 1,
@@ -50,7 +48,7 @@ enyo.Book.transition({
 		hidden: {
 			opacity: 0,
 			transform: {
-				scale: 0.7
+				scale: 1.3
 			}
 		}
 	}
