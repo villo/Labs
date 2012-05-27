@@ -59,13 +59,31 @@ enyo.Book.transition({
 });
 
 //Add the "slade"
-/*
 enyo.Book.transition({
 	name: "slade",
 	auto: true,
 	directional: true,
 	transition: {
 		duration: 500,
+		from: {
+			opacity: 0,
+			transform: {
+				translateX: "50%"
+			}
+		},
+		visible: {
+			opacity: 1,
+			transform: {
+				translateX: "0%"
+			}
+		},
+		out: {
+			opacity: 0,
+			transform: {
+				translateX: "-50%"
+			}
+		},
+		//TODO:
 		next: {
 			visible: {
 				opacity: 1,
@@ -92,4 +110,3 @@ enyo.Book.transition({
 		}
 	}
 });
-*/

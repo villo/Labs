@@ -52,11 +52,7 @@ enyo.kind({
 		if(this.transitioning){
 			this._cue.push({
 				"action": "startAnimation", 
-				"arguments": {
-					"number": number,
-					"history": history || "",
-					 "index": index || ""
-				}
+				"arguments": panes
 			});
 			return;
 		}
@@ -122,19 +118,19 @@ enyo.kind({
 				//NOTE: If you're using a 0ms transition, you're better off just setting before/after properties.
 				t.transition.duration === 0 ? t.transition.duration = 1 : "";
 				
+				//Make from/visible/out transitions easier for repeating properies:
+				if(t.transition.hidden){
+					t.transition.from = t.transition.hidden;
+					t.transition.out = t.transition.hidden;
+					delete t.transition.hidden;
+				}
+				
 				//Automatic step handling:
 				if(inSender.auto && inSender.auto === true){
 					if(t.directional){
 						//TODO: Handle directional transitions:
 					}else{
 						
-					}
-					
-					//Make from/visible/out transitions easier for repeating properies:
-					if(t.transition.hidden){
-						t.transition.from = t.transition.hidden;
-						t.transition.out = t.transition.hidden;
-						delete t.transition.hidden;
 					}
 					
 					//This is a base utility function which builds the differences between properties.
@@ -182,17 +178,23 @@ enyo.kind({
 									var d = differencesShow[x];
 									for(var y in d){
 										if(d.hasOwnProperty(y)){
-											var show = (1 - inSender.value)*differencesShow.transform[y];
-											var hide = inSender.value*differencesHide.transform[y];
+											//TODO: Percents:
+											var percent = false;
+											if(typeof(d[y]) === "string" && d[y].charAt(d[y].length-1) === "%"){
+												percent = true;
+												
+											}
+											var show = (1 - inSender.value)*parseFloat(differencesShow.transform[y]);
+											var hide = inSender.value*parseFloat(differencesHide.transform[y]);
 											
-											enyo.dom.transformValue(controls.show, y, moveThrough.visible.transform[y] - show);
-											enyo.dom.transformValue(controls.hide, y, moveThrough.visible.transform[y] - hide);
+											enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (percent ? "%" : 0));
+											enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (percent ? "%" : 0));
 										}
 									}
 								}else{
 									//TODO: Percents:
-									if(typeof(differencesShow[x]) === "string" && differencesShow[x].charAt(visible[x].length-1) === "%"){
-										console.log("parsing percent");
+									var percent = false;
+									if(typeof(differencesShow[x]) === "string" && differencesShow[x].charAt(differencesShow[x].length-1) === "%"){
 									}
 									
 									var show = (1 - inSender.value)*differencesShow[x];
