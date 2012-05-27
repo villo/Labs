@@ -2,14 +2,11 @@
 enyo.Book.transition({
 	name: "simple",
 	auto: true,
+	duration: 1,
 	transition: {
-		duration: 1,
-		visible: {
-			opacity: 1
-		},
-		hidden: {
-			opacity: 0
-		}
+		//We don't need to apply any styles, as Books will automatically show/hide the pages.
+		visible: {},
+		hidden: {}
 	}
 });
 
@@ -17,8 +14,8 @@ enyo.Book.transition({
 enyo.Book.transition({
 	name: "fade",
 	auto: true,
+	duration: 500,
 	transition: {
-		duration: 500,
 		visible: {
 			opacity: 1,
 		},
@@ -33,10 +30,8 @@ enyo.Book.transition({
 	name: "pop",
 	auto: true,
 	easing: enyo.easing.expoOut,
+	duration: 500,
 	transition: {
-		duration: 500,
-		//Some animations use different in/out transitions, so you can define them here.
-		//The book will automagically transition numerical values.
 		from: {
 			opacity: 0,
 			transform: {
@@ -54,18 +49,18 @@ enyo.Book.transition({
 			transform: {
 				scale: 1.3
 			}
-		},
+		}
 	}
 });
 
 //Add the "slade"
 enyo.Book.transition({
 	name: "slade",
-	auto: true,
+	auto: false,
 	directional: true,
 	easing: enyo.easing.quadInOut,
+	duration: 500,
 	transition: {
-		duration: 500,
 		next: {
 			from: {
 				opacity: 0,
@@ -108,14 +103,15 @@ enyo.Book.transition({
 		}
 	}
 });
+
 //Add the "slide"
 enyo.Book.transition({
 	name: "slide",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
+	duration: 500,
 	transition: {
-		duration: 500,
 		next: {
 			from: {
 				transform: {
@@ -149,6 +145,75 @@ enyo.Book.transition({
 					translateX: "100%"
 				}
 			},
+		}
+	}
+});
+
+//Add "spoode" (spin/zoom/fade) transition:
+enyo.Book.transition({
+	name: "spoode",
+	auto: true,
+	duration: 500,
+	easing: enyo.easing.quadInOut,
+	directional: true,
+	transition: {
+		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateX: "100%",
+					translateY: "100%",
+					rotate: "45deg",
+					scale: 0
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateX: "0%",
+					translateY: "0%",
+					rotate: "0deg",
+					scale: 1
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateX: "-100%",
+					translateY: "-100%",
+					rotate: "-45deg",
+					scale: 2
+				}
+			}
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateX: "-100%",
+					translateY: "-100%",
+					rotate: "-45deg",
+					scale: 2
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateX: "0%",
+					translateY: "0%",
+					rotate: "0deg",
+					scale: 1
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateX: "100%",
+					translateY: "100%",
+					rotate: "45deg",
+					scale: 0
+				}
+			}
 		}
 	}
 });

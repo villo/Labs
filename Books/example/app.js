@@ -10,7 +10,7 @@ enyo.kind({
 		{kind: "Button", onclick: "next", content: "Next"},
 		{kind: "Button", onclick: "lazyView", content: "Lazy"},
 		
-		{kind: "Book", name: "Book", transition: "slide", components: [
+		{kind: "Book", name: "Book", transition: "spoode", components: [
 			{name: "view1", tag: "h1", content: "Page number 1"},
 			{name: "view2", tag: "h1", content: "Page number 2"},
 			{name: "view3", tag: "h1", content: "Page number 3"},

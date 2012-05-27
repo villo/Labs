@@ -79,7 +79,7 @@ enyo.kind({
 		
 		this.$.theAnimationMachineForBook.setEasingFunction(t.easing || enyo.easing.linear);
 		
-		this.$.theAnimationMachineForBook.setDuration(t.transition.duration || 500);
+		this.$.theAnimationMachineForBook.setDuration(t.duration || 500);
 		
 		this._showingPane.show();
 		this._hidingPane.show();
@@ -93,9 +93,18 @@ enyo.kind({
 		}, inSender, this.direction);
 	},
 	handleAnimationEnd: function(){
+		
+		//This resets the styles applied to the element, so as to clear up the residue from animations.
+		//FIXME: Allow for before/after styles to carry over.
+		
+		this._showingPane.domStyles = [];
+		this._showingPane.domStylesChanged();
+		
+		this._hidingPane.domStyles = [];
+		this._hidingPane.domStylesChanged();
+		
 		this._hidingPane.hide();
-		this._showingPane.setStyle(" ");
-		this._hidingPane.setStyle(" ");
+		
 		this._end();
 	},
 	
@@ -121,9 +130,11 @@ enyo.kind({
 				//Import transition properties:
 				t.transition = inSender.transition;
 				
+				t.duration = inSender.duration || 500;
+				
 				//enyo.Animator messes things up if the duration is 0, so we set it to 1 ms.
 				//NOTE: If you're using a 0ms transition, you're better off just setting before/after properties.
-				t.transition.duration === 0 ? t.transition.duration = 1 : "";
+				t.duration === 0 ? t.duration = 1 : "";
 				
 				//Make from/visible/out transitions easier for repeating properies:
 				if(t.transition.hidden){
@@ -142,17 +153,25 @@ enyo.kind({
 								if(x === "transform"){
 									differences.transform = buildDifferences(objV.transform, objH.transform);
 								}
+								//Parse for numbers, percents, degrees, and pixels:
 								var use = false;
-								var percent = false;
+								var end = null;
 								if(typeof(objV[x]) === "number"){
 									use = true;
+									end = 0;
 								}else if(typeof(objV[x]) === "string" && objV[x].charAt(objV[x].length-1) === "%"){
 									use = true;
-									percent = true;
+									end = "%";
+								}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-3).toLowerCase() === "deg"){
+									use = true;
+									end = "deg";
+								}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-1).toLowerCase() === "px"){
+									use = true;
+									end = "px";
 								}
 								
 								if(use === true){
-									differences[x] = parseFloat(objV[x]) - parseFloat(objH[x]) + (percent ? "%" : 0);
+									differences[x] = parseFloat(objV[x]) - parseFloat(objH[x]) + end;
 								}
 							}
 						}
@@ -194,15 +213,24 @@ enyo.kind({
 									var d = diff.show[x];
 									for(var y in d){
 										if(d.hasOwnProperty(y)){
-											var percent = false;
+											
+											var end = 0;
 											if(typeof(d[y]) === "string" && d[y].charAt(d[y].length-1) === "%"){
-												percent = true;
+												use = true;
+												end = "%";
+											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-3).toLowerCase() === "deg"){
+												use = true;
+												end = "deg";
+											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-1).toLowerCase() === "px"){
+												use = true;
+												end = "px";
 											}
+											
 											var show = (1 - inSender.value)*parseFloat(diff.show.transform[y]);
 											var hide = inSender.value*parseFloat(diff.hide.transform[y]);
 											
-											enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (percent ? "%" : 0));
-											enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (percent ? "%" : 0));
+											enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (end));
+											enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (end));
 										}
 									}
 								}else{
@@ -212,11 +240,23 @@ enyo.kind({
 										percent = true;
 									}
 									
+									var end = 0;
+									if(typeof(diff.show[x]) === "string" && diff.show[x].charAt(diff.show[x].length-1) === "%"){
+										use = true;
+										end = "%";
+									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-3).toLowerCase() === "deg"){
+										use = true;
+										end = "deg";
+									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-1).toLowerCase() === "px"){
+										use = true;
+										end = "px";
+									}
+									
 									var show = (1 - inSender.value)*parseFloat(diff.show[x]);
 									var hide = inSender.value*parseFloat(diff.hide[x]);
 									
-									controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (percent ? "%" : 0));
-									controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (percent ? "%" : 0));
+									controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (end));
+									controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (end));
 								}
 							}
 						}
