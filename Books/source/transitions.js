@@ -108,3 +108,47 @@ enyo.Book.transition({
 		}
 	}
 });
+//Add the "slide"
+enyo.Book.transition({
+	name: "slide",
+	auto: true,
+	directional: true,
+	easing: enyo.easing.quadInOut,
+	transition: {
+		duration: 500,
+		next: {
+			from: {
+				transform: {
+					translateX: "100%"
+				}
+			},
+			visible: {
+				transform: {
+					translateX: "0%"
+				}
+			},
+			out: {
+				transform: {
+					translateX: "-100%"
+				}
+			},
+		},
+		back: {
+			from: {
+				transform: {
+					translateX: "-100%"
+				}
+			},
+			visible: {
+				transform: {
+					translateX: "0%"
+				}
+			},
+			out: {
+				transform: {
+					translateX: "100%"
+				}
+			},
+		}
+	}
+});

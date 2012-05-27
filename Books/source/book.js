@@ -24,6 +24,7 @@
 enyo.kind({
 	name: "enyo.Book",
 	kind: "Control",
+	classes: "enyo-book",
 	published: {
 		//"fade", "slade", "simple", "pop"
 		transition: "fade",
@@ -93,6 +94,8 @@ enyo.kind({
 	},
 	handleAnimationEnd: function(){
 		this._hidingPane.hide();
+		this._showingPane.setStyle(" ");
+		this._hidingPane.setStyle(" ");
 		this._end();
 	},
 	
