@@ -22,7 +22,7 @@
 
 
 enyo.kind({
-	name: "Book",
+	name: "enyo.Book",
 	kind: "Control",
 	published: {
 		//"fade", "slade", "simple", "pop"
@@ -33,21 +33,202 @@ enyo.kind({
 		//NOTE: if set to false, the "simple" transition will be used.
 		absolute: true
 	},
-	transitions: {
-		//Timing for transition properties.
-		"simple": 0,
-		"fade": 500,
-		"slade": 500,
-		"pop": 500
+	components: [
+		//The animator kind which steps through animations:
+		{
+			kind: "enyo.Animator",
+			easingFunction: enyo.easing.linear,
+			//We give this long name so as not to get it mixed up with pages:
+			name: "theAnimationMachineForBook",
+			startValue: 0,
+			endValue: 1,
+			duration: 500,
+			onStep: "handleAnimationStep",
+			onEnd: "handleAnimationEnd"
+		}
+	],
+	
+	startAnimation: function(panes){
+		if(this.transitioning){
+			this._cue.push({
+				"action": "startAnimation", 
+				"arguments": {
+					"number": number,
+					"history": history || "",
+					 "index": index || ""
+				}
+			});
+		}else{
+			if(this.cue){
+				this.transitioning = true;
+			}
+			
+			var c = this.getControls()[number];
+			
+			c.show();
+			if(this.transition != "slade"){
+				c.addClass("enyo-book-" + this.transition + "-in");
+			}else{
+				if(this.direction == "next"){
+					c.addClass("enyo-book-sladenext-in");
+				}else{
+					c.addClass("enyo-book-sladeback-in");
+				}
+			}
+			
+			this.pane = number;
+			if(history !== true){
+				this.history.push(this.pane);
+				this.historyPane = this.history.length-1;
+			}else{
+				this.historyPane = index;
+			}
+		}
+		
+		
+		//REAL: FIXME
+		var c = this.getControls();
+		this._showingPane = c[panes.show];
+		this._hidingPane = c[panes.hide];
+		
+		var t = enyo.Book.transitions[this.transition];
+		
+		if(t.easing){
+			this.$.theAnimationMachineForBook.setEasingFunction(t.easing);
+		}
+		this.$.theAnimationMachineForBook.setDuration(t.transition.duration || 500);
+		
+		this._showingPane.show();
+		this._hidingPane.show();
+		
+		this.$.theAnimationMachineForBook.play();
 	},
-	/*
-	 * cue lets you "fade through black" with transitions, so that they don't occur on top of each other.
-	 */
+	handleAnimationStep: function(inSender){
+		enyo.Book.transitions[this.transition].step({
+			show: this._showingPane,
+			hide: this._hidingPane
+		}, inSender);
+	},
+	handleAnimationEnd: function(){
+		this._hidingPane.hide();
+		this._end();
+	},
+	
+	statics: {
+		transitions: {},
+		//Add transition:
+		transition: function(inSender){
+			//Extract name: 
+			var name = inSender.name;
+			delete inSender.name;
+			if(!enyo.Book.transitions[name]){
+				var t = {};
+				
+				//Override Easing:
+				if(inSender.easing){
+					t.easing = inSender.easing;
+				}
+				
+				//Import transition properties:
+				t.transition = inSender.transition;
+				
+				if(inSender.auto && inSender.auto === true){
+					if(t.directional){
+						//Handle directional transitions:
+					}else{
+						
+					}
+					
+					var buildDifferences = function(objV, objH){
+						var differences = {}
+						for(var x in objV){
+							if(objV.hasOwnProperty(x)){
+								if(x === "transform"){
+									differences.transform = buildDifferences(objV.transform, objH.transform);
+								}
+								var use = false;
+								var percent = false;
+								if(typeof(objV[x]) === "number"){
+									use = true;
+								}else if(typeof(objV[x]) === "string" && objV[x].charAt(objV[x].length-1) === "%"){
+									use = true;
+									percent = true;
+								}else{
+									return false;
+								}
+								
+								if(use === true){
+									differences[x] = parseFloat(objV[x]) - parseFloat(objH[x]) + (percent ? "%" : 0);
+								}
+							}
+						}
+						
+						return differences;
+						
+					}
+					
+					var differences = buildDifferences(t.transition.visible, t.transition.hidden);
+					
+					/*
+					 * For numbers:
+					 * ------------
+					 * First, see how much difference exists between the two values (1 -> 0.7 = 0.3)
+					 * See how much the inSender.value is, and use that as our scaler. It always goes from 0 to 1.
+					 * Multiply the inSender.value and the first difference value (0.3), and that's what we set the property to.
+					 */
+					
+					//TODO: Adjust for directional transitions:
+					var moveThrough = t.transition;
+					
+					t.step = function(controls, inSender){
+						
+						for(var x in differences){
+							if(differences.hasOwnProperty(x)){
+								if(x === "transform"){
+									//Run this on the transform properties:
+								}else{
+									//TODO: Percents:
+									var show = (1 - inSender.value)*differences[x];
+									var hide = inSender.value*differences[x];
+									
+									controls.show.applyStyle(x, moveThrough.visible[x] - show);
+									controls.hide.applyStyle(x, moveThrough.visible[x] - hide);
+									/*
+									if(typeof(differences[x] === "number")){
+										//Automatic numerical parsing:
+										
+									}else if(typeof(differences[x]) === "string" && differences[x].charAt(visible[x].length-1) === "%"){
+										//Percents are numbers:
+										
+									}
+									*/
+									//control.applyStyle(x, visible[x]);
+								}
+							}
+						}
+						/*
+						if(true){
+							enyo.dom.transformValue(this.$.slidingThing, "translate", x + "," + y);
+						}
+						*/
+					}
+				}else{
+					
+				}
+				
+				enyo.Book.transitions[name] = t;
+			}else{
+				return false;
+			}
+		}
+	},
+	
+	//cue lets you "fade through black" with transitions, so that they don't occur on top of each other.
 	transitioning: false,
-	/*
-	 * Same thing as transitioning, but a level up.
-	 */
+	
+	// Same thing as transitioning, but a level up.
 	movementing: false,
+	
 	/*
 	 * Transition direction for slade
 	 * "back", "next"
@@ -67,6 +248,8 @@ enyo.kind({
 		//OP
 		this.history = [];
 		this.historyPane = null;
+		
+		//Inherit:
 		this.inherited(arguments);
 		
 		// Make all of the Pages invisible to start out with.
@@ -151,8 +334,11 @@ enyo.kind({
 				this._deleteLazyPane(name);
 			}else{
 				if(this.pane !== this._getPageNumber(name)){
-					this._hidePane(this.pane);
-					this._showPane(this._getPageNumber(name));
+					
+					this.startAnimation({"show": this._getPageNumber(name), "hide": this.pane});
+					
+					//this._hidePane(this.pane);
+					//this._showPane(this._getPageNumber(name));
 				}else{
 					this._end();
 				}
@@ -262,10 +448,12 @@ enyo.kind({
 				}
 			});
 		}else{
-			if(this.cue)
+			if(this.cue){
 				this.transitioning = true;
-				
+			}
+			
 			var c = this.getControls()[number];
+			
 			c.show();
 			if(this.transition != "slade"){
 				c.addClass("enyo-book-" + this.transition + "-in");
@@ -284,20 +472,6 @@ enyo.kind({
 			}else{
 				this.historyPane = index;
 			}
-			
-			window.setTimeout(enyo.bind(this, function(){
-				c.show();
-				if(this.transition != "slade"){
-					c.removeClass("enyo-book-" + this.transition + "-in");
-				}else{
-					if(this.direction == "next"){
-						c.removeClass("enyo-book-sladenext-in");
-					}else{
-						c.removeClass("enyo-book-sladeback-in");
-					}
-				}
-				this._end();
-			}), this.transitions[this.transition]);
 		}
 	},
 	_hidePane: function(number){
@@ -317,20 +491,6 @@ enyo.kind({
 					c.addClass("enyo-book-sladeback-out");
 				}
 			}
-			
-			window.setTimeout(enyo.bind(this, function(){
-				c.hide();
-				if(this.transition != "slade"){
-					c.removeClass("enyo-book-" + this.transition + "-out");
-				}else{
-					if(this.direction == "next"){
-						c.removeClass("enyo-book-sladenext-out");
-					}else{
-						c.removeClass("enyo-book-sladeback-out");
-					}
-				}
-				this._end();
-			}), this.transitions[this.transition]);
 		}
 	},
 	
