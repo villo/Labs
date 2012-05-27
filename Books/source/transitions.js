@@ -56,7 +56,7 @@ enyo.Book.transition({
 //Add the "slade"
 enyo.Book.transition({
 	name: "slade",
-	auto: false,
+	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
 	duration: 500,
