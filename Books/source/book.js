@@ -75,11 +75,10 @@ enyo.kind({
 			//No history
 		}else{
 			this.history.push(this.pane);
-			this.historyPane = this.history.length-1;
+			this.historyPane = this.history.length - 1;
 		}
 		
 		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
-		
 		
 		this.$.theAnimationMachineForBook.setEasingFunction(t.easing || enyo.easing.linear);
 		
@@ -123,13 +122,22 @@ enyo.kind({
 				//NOTE: If you're using a 0ms transition, you're better off just setting before/after properties.
 				t.transition.duration === 0 ? t.transition.duration = 1 : "";
 				
+				//Automatic step handling:
 				if(inSender.auto && inSender.auto === true){
 					if(t.directional){
-						//Handle directional transitions:
+						//TODO: Handle directional transitions:
 					}else{
 						
 					}
 					
+					//Make from/visible/out transitions easier for repeating properies:
+					if(t.transition.hidden){
+						t.transition.from = t.transition.hidden;
+						t.transition.out = t.transition.hidden;
+						delete t.transition.hidden;
+					}
+					
+					//This is a base utility function which builds the differences between properties.
 					var buildDifferences = function(objV, objH){
 						var differences = {}
 						for(var x in objV){
@@ -151,12 +159,12 @@ enyo.kind({
 								}
 							}
 						}
-						
 						return differences;
-						
 					}
 					
-					var differences = buildDifferences(t.transition.visible, t.transition.hidden);
+					var differencesShow = buildDifferences(t.transition.visible, t.transition.from);
+					var differencesHide = buildDifferences(t.transition.visible, t.transition.out);
+					
 					/*
 					 * For numbers:
 					 * ------------
@@ -168,14 +176,14 @@ enyo.kind({
 					//TODO: Adjust for directional transitions:
 					var moveThrough = t.transition;
 					t.step = function(controls, inSender){
-						for(var x in differences){
-							if(differences.hasOwnProperty(x)){
+						for(var x in differencesShow){
+							if(differencesShow.hasOwnProperty(x)){
 								if(x === "transform"){
-									var d = differences[x];
+									var d = differencesShow[x];
 									for(var y in d){
 										if(d.hasOwnProperty(y)){
-											var show = (1 - inSender.value)*d[y];
-											var hide = inSender.value*d[y];
+											var show = (1 - inSender.value)*differencesShow.transform[y];
+											var hide = inSender.value*differencesHide.transform[y];
 											
 											enyo.dom.transformValue(controls.show, y, moveThrough.visible.transform[y] - show);
 											enyo.dom.transformValue(controls.hide, y, moveThrough.visible.transform[y] - hide);
@@ -183,9 +191,12 @@ enyo.kind({
 									}
 								}else{
 									//TODO: Percents:
-									if(typeof(differences[x]) === "string" && differences[x].charAt(visible[x].length-1) === "%"){}
-									var show = (1 - inSender.value)*differences[x];
-									var hide = inSender.value*differences[x];
+									if(typeof(differencesShow[x]) === "string" && differencesShow[x].charAt(visible[x].length-1) === "%"){
+										console.log("parsing percent");
+									}
+									
+									var show = (1 - inSender.value)*differencesShow[x];
+									var hide = inSender.value*differencesHide[x];
 									
 									controls.show.applyStyle(x, moveThrough.visible[x] - show);
 									controls.hide.applyStyle(x, moveThrough.visible[x] - hide);
@@ -194,7 +205,7 @@ enyo.kind({
 						}
 					}
 				}else{
-					//TODO
+					//TODO: Do it yourself.
 				}
 				
 				enyo.Book.transitions[name] = t;

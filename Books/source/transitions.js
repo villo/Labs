@@ -5,12 +5,10 @@ enyo.Book.transition({
 	transition: {
 		duration: 1,
 		visible: {
-			opacity: 1,
-			display: "block"
+			opacity: 1
 		},
 		hidden: {
-			opacity: 0,
-			display: "none"
+			opacity: 0
 		}
 	}
 });
@@ -25,7 +23,6 @@ enyo.Book.transition({
 			opacity: 1,
 		},
 		hidden: {
-			//Need a matching pair value:
 			opacity: 0
 		}
 	}
@@ -35,26 +32,34 @@ enyo.Book.transition({
 enyo.Book.transition({
 	name: "pop",
 	auto: true,
-	easing: enyo.quadInOut,
+	easing: enyo.easing.expoOut,
 	transition: {
 		duration: 500,
-		//Transitions properties:
+		//Some animations use different in/out transitions, so you can define them here.
+		//The book will automagically transition numerical values.
+		from: {
+			opacity: 0,
+			transform: {
+				scale: 0.7
+			}
+		},
 		visible: {
 			opacity: 1,
 			transform: {
 				scale: 1
 			}
 		},
-		hidden: {
+		out: {
 			opacity: 0,
 			transform: {
 				scale: 1.3
 			}
-		}
+		},
 	}
 });
 
 //Add the "slade"
+/*
 enyo.Book.transition({
 	name: "slade",
 	auto: true,
@@ -87,3 +92,4 @@ enyo.Book.transition({
 		}
 	}
 });
+*/
