@@ -63,50 +63,48 @@ enyo.Book.transition({
 	name: "slade",
 	auto: true,
 	directional: true,
+	easing: enyo.easing.quadInOut,
 	transition: {
 		duration: 500,
-		from: {
-			opacity: 0,
-			transform: {
-				translateX: "50%"
-			}
-		},
-		visible: {
-			opacity: 1,
-			transform: {
-				translateX: "0%"
-			}
-		},
-		out: {
-			opacity: 0,
-			transform: {
-				translateX: "-50%"
-			}
-		},
-		//TODO:
 		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateX: "50%"
+				}
+			},
 			visible: {
 				opacity: 1,
 				transform: {
 					translateX: "0%"
 				}
 			},
-			hidden: {
+			out: {
+				opacity: 0,
+				transform: {
+					translateX: "-50%"
+				}
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateX: "-50%"
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateX: "0%"
+				}
+			},
+			out: {
 				opacity: 0,
 				transform: {
 					translateX: "50%"
 				}
-			}
-		},
-		back: {
-			visible: {
-				opacity: 1,
-				scale: 1
 			},
-			hidden: {
-				opacity: 0,
-				scale: 0.7
-			}
 		}
 	}
 });

@@ -89,7 +89,7 @@ enyo.kind({
 		enyo.Book.transitions[this.transition].step({
 			show: this._showingPane,
 			hide: this._hidingPane
-		}, inSender);
+		}, inSender, this.direction);
 	},
 	handleAnimationEnd: function(){
 		this._hidingPane.hide();
@@ -111,6 +111,10 @@ enyo.kind({
 					t.easing = inSender.easing;
 				}
 				
+				if(inSender.directional && inSender.directional === true){
+					t.directional = true;
+				}
+				
 				//Import transition properties:
 				t.transition = inSender.transition;
 				
@@ -127,15 +131,9 @@ enyo.kind({
 				
 				//Automatic step handling:
 				if(inSender.auto && inSender.auto === true){
-					if(t.directional){
-						//TODO: Handle directional transitions:
-					}else{
-						
-					}
-					
 					//This is a base utility function which builds the differences between properties.
 					var buildDifferences = function(objV, objH){
-						var differences = {}
+						var differences = {};
 						for(var x in objV){
 							if(objV.hasOwnProperty(x)){
 								if(x === "transform"){
@@ -157,35 +155,48 @@ enyo.kind({
 						}
 						return differences;
 					}
+						
+					var differences = {};
+					if(t.directional){
+						differences = {
+							next: {
+								show: buildDifferences(t.transition.next.visible, t.transition.next.from),
+								hide: buildDifferences(t.transition.next.visible, t.transition.next.out)
+							},
+							back: {
+								show: buildDifferences(t.transition.back.visible, t.transition.back.from),
+								hide: buildDifferences(t.transition.back.visible, t.transition.back.out)
+							}
+						}
+					}else{
+						differences = {
+							show: buildDifferences(t.transition.visible, t.transition.from),
+							hide: buildDifferences(t.transition.visible, t.transition.out)
+						}
+					}
 					
-					var differencesShow = buildDifferences(t.transition.visible, t.transition.from);
-					var differencesHide = buildDifferences(t.transition.visible, t.transition.out);
-					
-					/*
-					 * For numbers:
-					 * ------------
-					 * First, see how much difference exists between the two values (1 -> 0.7 = 0.3)
-					 * See how much the inSender.value is, and use that as our scaler. It always goes from 0 to 1.
-					 * Multiply the inSender.value and the first difference value (0.3), and that's what we set the property to.
-					 */
-					
-					//TODO: Adjust for directional transitions:
-					var moveThrough = t.transition;
-					t.step = function(controls, inSender){
-						for(var x in differencesShow){
-							if(differencesShow.hasOwnProperty(x)){
+					t.step = function(controls, inSender, direction){
+						
+						//Direciton handling:
+						var diff = differences;
+						var moveThrough = t.transition;
+						if(t.directional){
+							diff = differences[direction];
+							moveThrough = t.transition[direction];
+						}
+						
+						for(var x in diff.show){
+							if(diff.show.hasOwnProperty(x)){
 								if(x === "transform"){
-									var d = differencesShow[x];
+									var d = diff.show[x];
 									for(var y in d){
 										if(d.hasOwnProperty(y)){
-											//TODO: Percents:
 											var percent = false;
 											if(typeof(d[y]) === "string" && d[y].charAt(d[y].length-1) === "%"){
 												percent = true;
-												
 											}
-											var show = (1 - inSender.value)*parseFloat(differencesShow.transform[y]);
-											var hide = inSender.value*parseFloat(differencesHide.transform[y]);
+											var show = (1 - inSender.value)*parseFloat(diff.show.transform[y]);
+											var hide = inSender.value*parseFloat(diff.hide.transform[y]);
 											
 											enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (percent ? "%" : 0));
 											enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (percent ? "%" : 0));
@@ -194,14 +205,15 @@ enyo.kind({
 								}else{
 									//TODO: Percents:
 									var percent = false;
-									if(typeof(differencesShow[x]) === "string" && differencesShow[x].charAt(differencesShow[x].length-1) === "%"){
+									if(typeof(diff.show[x]) === "string" && diff.show[x].charAt(diff.show[x].length-1) === "%"){
+										percent = true;
 									}
 									
-									var show = (1 - inSender.value)*differencesShow[x];
-									var hide = inSender.value*differencesHide[x];
+									var show = (1 - inSender.value)*parseFloat(diff.show[x]);
+									var hide = inSender.value*parseFloat(diff.hide[x]);
 									
-									controls.show.applyStyle(x, moveThrough.visible[x] - show);
-									controls.hide.applyStyle(x, moveThrough.visible[x] - hide);
+									controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (percent ? "%" : 0));
+									controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (percent ? "%" : 0));
 								}
 							}
 						}
