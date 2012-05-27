@@ -26,10 +26,12 @@ enyo.kind({
 	kind: "Control",
 	classes: "enyo-book",
 	published: {
-		//"fade", "slade", "simple", "pop"
+		//"fade", "slade", "slide", "spoode", "simple", "pop"
 		transition: "fade",
-		//allow for an action cue that processes input while still animating. This also makes animations go one at a time.
+		
+		//No longer used:
 		cue: false,
+		
 		//set to false if you don't want the content to be forced into absolute. 
 		//NOTE: if set to false, the "simple" transition will be used.
 		absolute: true
@@ -48,65 +50,6 @@ enyo.kind({
 			onEnd: "handleAnimationEnd"
 		}
 	],
-	
-	startAnimation: function(panes){
-		if(this.transitioning){
-			this._cue.push({
-				"action": "startAnimation", 
-				"arguments": panes
-			});
-			return;
-		}
-		
-		if(this.cue){
-			this.transitioning = true;
-		}
-		
-		//REAL: FIXME
-		var c = this.getControls();
-		this._showingPane = c[panes.show];
-		this._hidingPane = c[panes.hide];
-		
-		this.pane = panes.show;
-		if(panes.history && panes.history === false){
-			//No history
-		}else{
-			this.history.push(this.pane);
-			this.historyPane = this.history.length - 1;
-		}
-		
-		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
-		
-		this.$.theAnimationMachineForBook.setEasingFunction(t.easing || enyo.easing.linear);
-		
-		this.$.theAnimationMachineForBook.setDuration(t.duration || 500);
-		
-		this._showingPane.show();
-		this._hidingPane.show();
-		
-		this.$.theAnimationMachineForBook.play();
-	},
-	handleAnimationStep: function(inSender){
-		enyo.Book.transitions[this.transition].step({
-			show: this._showingPane,
-			hide: this._hidingPane
-		}, inSender, this.direction);
-	},
-	handleAnimationEnd: function(){
-		
-		//This resets the styles applied to the element, so as to clear up the residue from animations.
-		//FIXME: Allow for before/after styles to carry over.
-		
-		this._showingPane.domStyles = [];
-		this._showingPane.domStylesChanged();
-		
-		this._hidingPane.domStyles = [];
-		this._hidingPane.domStylesChanged();
-		
-		this._hidingPane.hide();
-		
-		this._end();
-	},
 	
 	statics: {
 		transitions: {},
@@ -229,8 +172,12 @@ enyo.kind({
 											var show = (1 - inSender.value)*parseFloat(diff.show.transform[y]);
 											var hide = inSender.value*parseFloat(diff.hide.transform[y]);
 											
-											enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (end));
-											enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (end));
+											if(controls.show){
+												enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (end));
+											}
+											if(controls.hide){
+												enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (end));
+											}
 										}
 									}
 								}else{
@@ -255,14 +202,18 @@ enyo.kind({
 									var show = (1 - inSender.value)*parseFloat(diff.show[x]);
 									var hide = inSender.value*parseFloat(diff.hide[x]);
 									
-									controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (end));
-									controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (end));
+									if(controls.show){
+										controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (end));
+									}
+									if(controls.hide){
+										controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (end));
+									}
 								}
 							}
 						}
 					}
 				}else{
-					//TODO: Do it yourself.
+					t.step = inSender.step;
 				}
 				
 				enyo.Book.transitions[name] = t;
@@ -272,18 +223,13 @@ enyo.kind({
 		}
 	},
 	
-	//cue lets you "fade through black" with transitions, so that they don't occur on top of each other.
-	transitioning: false,
-	
 	// Same thing as transitioning, but a level up.
 	movementing: false,
 	
-	/*
-	 * Transition direction for slade
-	 * "back", "next"
-	 */
+	//Transition direction ("back", "next")
 	direction: "next",
 	defaultKind: "Page",
+	
 	create: function(){
 		if(this.absolute === false){
 			//Swap for controls.
@@ -294,7 +240,7 @@ enyo.kind({
 		this.setOwner = this.owner;
 		this.pane = null;
 		this.lazy = [];
-		//OP
+		
 		this.history = [];
 		this.historyPane = null;
 		
@@ -311,7 +257,64 @@ enyo.kind({
 	
 	rendered: function(){
 		this.inherited(arguments);
-		this._showPane(0, true);
+		this.startAnimation({
+			show: 0,
+			hide: false
+		});
+	},
+	
+	startAnimation: function(panes){
+		
+		//REAL: FIXME
+		var c = this.getControls();
+		this._showingPane = c[panes.show];
+		this._hidingPane = c[panes.hide];
+		
+		if(panes.disableHistory && panes.disableHistory === true){
+			//No history
+			this.historyPane = panes.index;
+		}else{
+			this.history.push(parseInt(panes.show));
+			this.historyPane = this.history.length - 1;
+		}
+		
+		console.log(this.history);
+		
+		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
+		
+		this.$.theAnimationMachineForBook.setEasingFunction(t.easing || enyo.easing.linear);
+		
+		this.$.theAnimationMachineForBook.setDuration(t.duration || 500);
+		
+		this._showingPane ? this._showingPane.show() : "";
+		this._hidingPane ? this._hidingPane.show(): "";
+		
+		this.pane = panes.show;
+		
+		this.$.theAnimationMachineForBook.play();
+	},
+	
+	handleAnimationStep: function(inSender){
+		enyo.Book.transitions[this.transition].step({
+			show: this._showingPane,
+			hide: this._hidingPane
+		}, inSender, this.direction);
+	},
+	
+	handleAnimationEnd: function(){
+		
+		//This resets the styles applied to the element, so as to clear up the residue from animations.
+		//FIXME: Allow for before/after styles to carry over.
+		
+		this._showingPane ? this._showingPane.domStyles = [] : "";
+		this._showingPane ? this._showingPane.domStylesChanged() : "";
+		
+		this._hidingPane ? this._hidingPane.domStyles = [] : "";
+		this._hidingPane ? this._hidingPane.domStylesChanged() : "";
+		
+		this._hidingPane ? this._hidingPane.hide() : "";
+		
+		this._end();
 	},
 	
 	initComponents: function(){
@@ -336,45 +339,43 @@ enyo.kind({
 		this.inherited(arguments);
 	},
 	pageNumber: function(number){
+		//Adjust to array-friendly numbers:
+		number = number-1;
+		
 		if(this.pane < number) {
 			this.direction = "next";
 		}else{
 			this.direction = "back";
 		}
+		
 		if(this.pane !== number){
 			if(this.movementing){
-				if(this.cue){
-					this._cue({
-						"action": "pageNumber",
-						"arguments": number
-					});
-				}
+				
 			}else{
 				this.movementing = true;
-				this._hidePane(this.pane);
-				this._showPane(number);
+				
+				this.startAnimation({"show": number, "hide": this.pane});
+				
 			}
 		}
 	},
 	pageName: function(name){
+		//Establish Direction:
 		if(this.pane < this._getPageNumber(name)) {
 			this.direction = "next";
 		}else{
 			this.direction = "back";
 		}
+		
 		if(this.movementing){
-			if(this.cue){
-				this._cue.push({
-					"action": "pageName",
-					"arguments": name
-				});
-			}
+			//Do nothing.
 		}else{
 			this.movementing = true;
 			/*
 			 * Check for lazy pages.
 			 */
 			if(this._paneIsLazy(name)){
+				//TODO:
 				//Check for already rendered lazy views
 				this._hidePane(this.pane);
 				this.createComponent(this._getLazyPane(name), {owner: this.owner});
@@ -383,11 +384,10 @@ enyo.kind({
 				this._deleteLazyPane(name);
 			}else{
 				if(this.pane !== this._getPageNumber(name)){
-					
-					this.startAnimation({"show": this._getPageNumber(name), "hide": this.pane});
-					
-					//this._hidePane(this.pane);
-					//this._showPane(this._getPageNumber(name));
+					this.startAnimation({
+						"show": this._getPageNumber(name), 
+						"hide": this.pane
+					});
 				}else{
 					this._end();
 				}
@@ -398,16 +398,15 @@ enyo.kind({
 	back: function(){
 		this.direction = "back";
 		if(this.movementing){
-			if(this.cue){
-				this._cue.push({
-					"action": "back",
-					"arguments": ""
-				});
-			}
+			
 		}else{
-			if(this.history[this.historyPane-1]){
-				this._hidePane(this.pane);
-				this._showPane(this.history[this.historyPane-1], true, this.historyPane-1);
+			if(typeof(this.history[this.historyPane-1]) === "number"){
+				this.startAnimation({
+					show: this.history[this.historyPane-1], 
+					hide: this.pane,
+					disableHistory: true,
+					index: this.historyPane-1
+				});
 			}else{
 				return false;
 			}
@@ -416,16 +415,15 @@ enyo.kind({
 	next: function(){
 		this.direction = "next";
 		if(this.movementing){
-			if(this.cue){
-				this._cue.push({
-					"action": "next",
-					"arguments": ""
-				});
-			}
+			
 		}else{
-			if(this.history[this.historyPane+1]){
-				this._hidePane(this.pane);
-				this._showPane(this.history[this.historyPane+1], true, this.historyPane+1);
+			if(typeof(this.history[this.historyPane+1]) === "number"){
+				this.startAnimation({
+					show: this.history[this.historyPane+1], 
+					hide: this.pane,
+					disableHistory: true,
+					index: this.historyPane+1
+				});
 			}else{
 				return false;
 			}
@@ -473,33 +471,16 @@ enyo.kind({
 				}
 			}
 		}
-		return number;
+		return parseInt(number);
 	},
-	
-	//Set up the cue, which we can use to push actions that we need to delay.
-	_cue: [],
 	
 	//Core utility show and hide functions
 	_showPane: function(number, history, index){
-		//Extract from cued functions:
 		if(typeof(number) === "object"){
 			var index = number.index;
 			var history = number.history;
 			var number = number.number;
 		}
-		if(this.transitioning){
-			this._cue.push({
-				"action": "_showPane", 
-				"arguments": {
-					"number": number,
-					"history": history || "",
-					 "index": index || ""
-				}
-			});
-		}else{
-			if(this.cue){
-				this.transitioning = true;
-			}
 			
 			var c = this.getControls()[number];
 			
@@ -521,15 +502,8 @@ enyo.kind({
 			}else{
 				this.historyPane = index;
 			}
-		}
 	},
 	_hidePane: function(number){
-		if(this.transitioning){
-			this._cue.push({"action": "_hidePane", "arguments": number});
-		}else{
-			if(this.cue){
-				this.transitioning = true;
-			}
 				
 			var c = this.getControls()[number];
 			if(this.transition != "slade"){
@@ -541,21 +515,9 @@ enyo.kind({
 					c.addClass("enyo-book-sladeback-out");
 				}
 			}
-		}
 	},
 	
 	_end: function(){
 		this.movementing = false;
-		this.transitioning = false;
-		this._startCue();
-	},
-	
-	_startCue: function(){
-		if(this._cue.length >= 1){
-			var action = this._cue[0].action;
-			var args = this._cue[0].arguments;
-			this._cue.splice(0, 1)
-			this[action](args);
-		}
 	}
 });

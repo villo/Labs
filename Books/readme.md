@@ -40,12 +40,11 @@ Properties
 You can alter the functionality of Books by using certain properties when referencing the kind.
 
 - The "transition" property lets you define what animation you wish to use when pages are changing. Currently, the transitions "fade", "pop", "slade", "slide", "spoode", and "simple" are supported. Fade is used by default.
-- The "cue" property will prevent animations from occuring concurrently, and run them once the current animation is completed. This is disabled by default.
 - The "absolute" property changes how the pages are displayed. By default, all pages are given a "position: absolute;" style to allow animations to work correctly. Setting "absolute" to false will remove this styling, and set the transition to "simple".
 
 Here's an example of some properties in action:
 
-	{kind: "Book", cue: true, transition: "pop"}
+	{kind: "Book", transition: "pop"}
 
 Methods
 -------
@@ -74,5 +73,4 @@ If you wish for your content to fit to its container, simply add "enyo-fit" to t
 Known Issues
 ------------
 
-- The "back" method will not move back to the page viewed when the Book loads.
 - The "pageNumber" method can break with lazy pages. The numbering system doesn't work as expectected.

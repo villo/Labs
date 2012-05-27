@@ -22,6 +22,9 @@ enyo.kind({
 	
 	changeView: function(inSender){
 		this.$.Book.pageName("view" + inSender.view);
+		
+		//This also works:
+		//this.$.Book.pageNumber(inSender.view);
 	},
 	
 	back: function(){
