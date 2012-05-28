@@ -230,9 +230,9 @@ enyo.Book.transition({
 	}
 });
 
-//Add the "hflip"
+//Add the "hflip3d"
 enyo.Book.transition({
-	name: "hflip",
+	name: "hflip3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
@@ -287,9 +287,9 @@ enyo.Book.transition({
 	}
 });
 
-//Add the "boxturn"
+//Add the "boxturn3d"
 enyo.Book.transition({
-	name: "boxturn",
+	name: "boxturn3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
@@ -350,9 +350,9 @@ enyo.Book.transition({
 	}
 });
 
-//Add the "pageturn"
+//Add the "pageturn3d"
 enyo.Book.transition({
-	name: "pageturn",
+	name: "pageturn3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
@@ -413,9 +413,9 @@ enyo.Book.transition({
 	}
 });
 
-//Add the "pagespin"
+//Add the "pagespin3d"
 enyo.Book.transition({
-	name: "pagespin",
+	name: "pagespin3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
