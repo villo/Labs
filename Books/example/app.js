@@ -18,7 +18,7 @@ enyo.kind({
 		]},
 		
 		{tag: "div", name: "bookDiv", style: "position:absolute; width:100%; top:24px; bottom:0;", components:[
-			{kind: "Book", name: "Book", transition: "slade", style: "position:absolute; left:20px; right:20px; top:20px; bottom:20px;",
+			{kind: "Book", name: "Book", style: "position:absolute; left:20px; right:20px; top:20px; bottom:20px;",
 			components: [
 				{name: "view1", tag: "h1", content: "Page number 1"},
 				{name: "view2", tag: "h1", content: "Page number 2"},

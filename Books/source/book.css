@@ -18,8 +18,3 @@
 	-ms-backface-visibility: hidden;
 	background: pink;
 }
-
-/* For slade & slide */
-.trans-slide {
-	overflow: hidden;
-}

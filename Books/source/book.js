@@ -280,7 +280,7 @@ enyo.kind({
 		if(this.absolute === false){
 			//Swap for controls.
 			this.defaultKind = "Control";
-			this.transition = "simple";
+			this.setTransition("simple");
 		}
 		
 		this.setOwner = this.owner;
@@ -386,9 +386,9 @@ enyo.kind({
 					c.push(this.components[x]);
 				}
 				
-				if(this.absolute === false){
-					if(this.components[x].absolute = false);
-				}
+				//if(this.absolute === false){
+				//if(this.components[x].absolute = false);
+				//}
 			}
 		}
 		this.components = c;
@@ -423,16 +423,13 @@ enyo.kind({
 		if(this.movementing){
 			//Do nothing.
 		}else{
-			/*
-			 * Check for lazy pages.
-			 */
 			if(this._paneIsLazy(name)){
-				//TODO:
 				//Check for already rendered lazy views
-				this._hidePane(this.pane);
-				this.createComponent(this._getLazyPane(name), {owner: this.owner});
-				this.getControls()[this._getPageNumber(name)].render();
-				this._showPane(this._getPageNumber(name));
+				this.createComponent(this._getLazyPane(name), {owner: this.owner}).render();
+				this.startAnimation({
+					show: this._getPageNumber(name),
+					hide: this.pane
+				})
 				this._deleteLazyPane(name);
 			}else{
 				if(this.pane !== this._getPageNumber(name)){
