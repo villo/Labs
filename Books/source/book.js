@@ -139,7 +139,64 @@ enyo.kind({
 							hide: buildDifferences(t.transition.visible, t.transition.out)
 						}
 					}
-					
+					t.before = function(controls){
+						if(t.transition.before){
+							var b = t.transition.before;
+							for(var x in b){
+								if(b.hasOwnProperty(x)){
+									if(x === "transform"){
+										var et = b[x];
+										for(var y in et){
+											if(et.hasOwnProperty(y)){
+												if(controls.show){
+													enyo.dom.transformValue(controls.show, y, et[y]);
+												}
+												if(controls.hide){
+													enyo.dom.transformValue(controls.hide, y, et[y]);
+												}
+											}
+										}
+									}else{
+										if(controls.show){
+											controls.show.applyStyle(x, b[x]);
+										}
+										if(controls.hide){
+											controls.hide.applyStyle(x, b[x]);
+										}
+									}
+								}
+							}
+						}
+					};
+					t.after = function(controls){
+						if(t.transition.after){
+							var a = t.transition.after;
+							for(var x in a){
+								if(a.hasOwnProperty(x)){
+									if(x === "transform"){
+										var et = a[x];
+										for(var y in et){
+											if(et.hasOwnProperty(y)){
+												if(controls.show){
+													enyo.dom.transformValue(controls.show, y, et[y]);
+												}
+												if(controls.hide){
+													enyo.dom.transformValue(controls.hide, y, et[y]);
+												}
+											}
+										}
+									}else{
+										if(controls.show){
+											controls.show.applyStyle(x, a[x]);
+										}
+										if(controls.hide){
+											controls.hide.applyStyle(x, a[x]);
+										}
+									}
+								}
+							}
+						}
+					};
 					t.step = function(controls, inSender, direction){
 						
 						//Direciton handling:
@@ -159,13 +216,10 @@ enyo.kind({
 											
 											var end = 0;
 											if(typeof(d[y]) === "string" && d[y].charAt(d[y].length-1) === "%"){
-												use = true;
 												end = "%";
 											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-3).toLowerCase() === "deg"){
-												use = true;
 												end = "deg";
 											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-1).toLowerCase() === "px"){
-												use = true;
 												end = "px";
 											}
 											
@@ -181,21 +235,13 @@ enyo.kind({
 										}
 									}
 								}else{
-									//TODO: Percents:
-									var percent = false;
-									if(typeof(diff.show[x]) === "string" && diff.show[x].charAt(diff.show[x].length-1) === "%"){
-										percent = true;
-									}
 									
 									var end = 0;
 									if(typeof(diff.show[x]) === "string" && diff.show[x].charAt(diff.show[x].length-1) === "%"){
-										use = true;
 										end = "%";
 									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-3).toLowerCase() === "deg"){
-										use = true;
 										end = "deg";
 									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-1).toLowerCase() === "px"){
-										use = true;
 										end = "px";
 									}
 									
@@ -211,7 +257,7 @@ enyo.kind({
 								}
 							}
 						}
-					}
+					};
 				}else{
 					t.step = inSender.step;
 				}
@@ -279,8 +325,6 @@ enyo.kind({
 			this.historyPane = this.history.length - 1;
 		}
 		
-		console.log(this.history);
-		
 		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
 		
 		this.$.theAnimationMachineForBook.setEasingFunction(t.easing || enyo.easing.linear);
@@ -292,11 +336,17 @@ enyo.kind({
 		
 		this.pane = panes.show;
 		
+		t.before({
+			show: this._showingPane,
+			hide: this._hidingPane
+		});
+		
 		this.$.theAnimationMachineForBook.play();
 	},
 	
 	handleAnimationStep: function(inSender){
-		enyo.Book.transitions[this.transition].step({
+		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
+		t.step({
 			show: this._showingPane,
 			hide: this._hidingPane
 		}, inSender, this.direction);
@@ -305,7 +355,6 @@ enyo.kind({
 	handleAnimationEnd: function(){
 		
 		//This resets the styles applied to the element, so as to clear up the residue from animations.
-		//FIXME: Allow for before/after styles to carry over.
 		
 		this._showingPane ? this._showingPane.domStyles = [] : "";
 		this._showingPane ? this._showingPane.domStylesChanged() : "";
@@ -314,6 +363,12 @@ enyo.kind({
 		this._hidingPane ? this._hidingPane.domStylesChanged() : "";
 		
 		this._hidingPane ? this._hidingPane.hide() : "";
+		
+		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
+		t.after({
+			show: this._showingPane,
+			hide: this._hidingPane
+		})
 		
 		this._end();
 	},

@@ -1,10 +1,25 @@
 .enyo-book {
-	overflow: hidden;
+	-webkit-perspective: 2000px;
+	-moz-perspective: 2000px;
+	-o-perspective: 2000px;
+	-ms-perspective: 2000px;
 }
 
 /*
- * Pages should appear over eachother, and we do this through applying this to all pages:
+ * Pages should appear over eachother, also backfaces aren't required currently
+ * We do this through applying this to all pages:
  */
 .enyo-page {
 	position: absolute;
+	
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	-o-backface-visibility: hidden;
+	-ms-backface-visibility: hidden;
+	background: pink;
+}
+
+/* For slade & slide */
+.trans-slide {
+	overflow: hidden;
 }

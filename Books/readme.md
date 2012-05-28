@@ -74,3 +74,4 @@ Known Issues
 ------------
 
 - The "pageNumber" method can break with lazy pages. The numbering system doesn't work as expectected.
+- The target page may appear for a split second pre-transition the first time it is made visible.

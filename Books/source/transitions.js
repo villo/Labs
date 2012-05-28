@@ -48,7 +48,7 @@ enyo.Book.transition({
 			opacity: 0,
 			transform: {
 				scale: 1.3
-			}
+			},
 		}
 	}
 });
@@ -65,19 +65,22 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					translateX: "50%"
+					translateX: "50%",
+					translateZ: "0"
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateX: "0%"
+					translateX: "0%",
+					translateZ: "0"
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateX: "-50%"
+					translateX: "-50%",
+					translateZ: "0"
 				}
 			},
 		},
@@ -85,19 +88,22 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					translateX: "-50%"
+					translateX: "-50%",
+					translateZ: "0"
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateX: "0%"
+					translateX: "0%",
+					translateZ: "0"
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateX: "50%"
+					translateX: "50%",
+					translateZ: "0"
 				}
 			},
 		}
@@ -115,34 +121,40 @@ enyo.Book.transition({
 		next: {
 			from: {
 				transform: {
-					translateX: "100%"
+					translateX: "100%",
+					translateZ: "0"
 				}
 			},
 			visible: {
 				transform: {
-					translateX: "0%"
+					translateX: "0%",
+					translateZ: "0"
 				}
 			},
 			out: {
 				transform: {
-					translateX: "-100%"
+					translateX: "-100%",
+					translateZ: "0"
 				}
 			},
 		},
 		back: {
 			from: {
 				transform: {
-					translateX: "-100%"
+					translateX: "-100%",
+					translateZ: "0"
 				}
 			},
 			visible: {
 				transform: {
-					translateX: "0%"
+					translateX: "0%",
+					translateZ: "0"
 				}
 			},
 			out: {
 				transform: {
-					translateX: "100%"
+					translateX: "100%",
+					translateZ: "0"
 				}
 			},
 		}
@@ -215,5 +227,245 @@ enyo.Book.transition({
 				}
 			}
 		}
+	}
+});
+
+//Add the "hflip"
+enyo.Book.transition({
+	name: "hflip",
+	auto: true,
+	directional: true,
+	easing: enyo.easing.quadInOut,
+	duration: 800,
+	transition: {
+		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "180deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "0px",
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "-180deg",
+				}
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "-180deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "0px",
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "180deg",
+				}
+			},
+		}
+	}
+});
+
+//Add the "boxturn"
+enyo.Book.transition({
+	name: "boxturn",
+	auto: true,
+	directional: true,
+	easing: enyo.easing.quadInOut,
+	duration: 600,
+	transition: {
+		before: {
+			"-webkit-transform-origin": "50% 50% -150px",
+			"-moz-transform-origin": "50% 50% -150px",
+			"-o-transform-origin": "50% 50% -150px",
+			"-ms-transform-origin": "50% 50% -150px",
+		},
+		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-150px",
+					rotateY: "90deg"
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "-150px",
+					rotateY: "0deg"
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-150px",
+					rotateY: "-90deg"
+				},
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-150px",
+					rotateY: "-90deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "-150px",
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-150px",
+					rotateY: "90deg",
+				},
+			},
+		},
+	}
+});
+
+//Add the "pageturn"
+enyo.Book.transition({
+	name: "pageturn",
+	auto: true,
+	directional: true,
+	easing: enyo.easing.quadInOut,
+	duration: 800,
+	transition: {
+		before: {
+			"-webkit-transform-origin": "0% 50% 0",
+			"-moz-transform-origin": "0% 50% 0",
+			"-o-transform-origin": "0% 50% 0",
+			"-ms-transform-origin": "0% 50% 0"
+		},
+		next: {
+			from: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "-1px"
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "0px"
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+					translateZ: "1px"
+				},
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+					translateZ: "1px"
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "0px"
+				}
+			},
+			out: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "-1px"
+				},
+			},
+		},
+	}
+});
+
+//Add the "pagespin"
+enyo.Book.transition({
+	name: "pagespin",
+	auto: true,
+	directional: true,
+	easing: enyo.easing.quadInOut,
+	duration: 800,
+	transition: {
+		before: {
+			"-webkit-transform-origin": "0% 50% 0",
+			"-moz-transform-origin": "0% 50% 0",
+			"-o-transform-origin": "0% 50% 0",
+			"-ms-transform-origin": "0% 50% 0"
+		},
+		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					rotateY: "90deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+				},
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					rotateY: "90deg",
+				},
+			},
+		},
 	}
 });
