@@ -296,10 +296,10 @@ enyo.Book.transition({
 	duration: 600,
 	transition: {
 		before: {
-			"-webkit-transform-origin": "50% 50% -150px",
-			"-moz-transform-origin": "50% 50% -150px",
-			"-o-transform-origin": "50% 50% -150px",
-			"-ms-transform-origin": "50% 50% -150px",
+			"-webkit-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
+			"-moz-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
+			"-o-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
+			"-ms-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px"
 		},
 		next: {
 			from: {
