@@ -235,52 +235,47 @@ enyo.Book.transition({
 	name: "hflip",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
 		next: {
 			from: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "180deg",
+					scaleX: -1,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "0px",
-					rotateY: "0deg",
+					scaleX: 1,
 				}
 			},
 			out: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "-180deg",
+					scaleX: -1,
 				}
 			},
 		},
 		back: {
 			from: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "-180deg",
+					scaleX: -1,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "0px",
-					rotateY: "0deg",
+					scaleX: 1,
 				}
 			},
 			out: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "180deg",
+					scaleX: -1,
 				}
 			},
 		}
@@ -292,6 +287,7 @@ enyo.Book.transition({
 	name: "boxturn",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 600,
 	transition: {
@@ -355,6 +351,7 @@ enyo.Book.transition({
 	name: "pageturn",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
@@ -418,6 +415,7 @@ enyo.Book.transition({
 	name: "pagespin",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
