@@ -309,6 +309,17 @@ enyo.kind({
 		});
 	},
 	
+	setTransition: function(inValue){
+		this.transition = inValue;
+		
+		enyo.log(this.transition);
+		enyo.log(enyo.dom.canAccelerate(), enyo.Book.transitions[this.transition].has3d);
+		//Check for hardware accelleration and switch to 3D transition if applicable
+		if(enyo.dom.canAccelerate() && enyo.Book.transitions[this.transition].has3d){
+			this.transition += "3d";
+		}
+	},
+	
 	startAnimation: function(panes){
 		//We are moving:
 		this.movementing = true;
