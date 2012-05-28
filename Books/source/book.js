@@ -524,6 +524,7 @@ enyo.kind({
 	},
 	
 	//Core utility show and hide functions
+	/* Are these required with the new animation system? Seems unnecessary to keep them.
 	_showPane: function(number, history, index){
 		if(typeof(number) === "object"){
 			var index = number.index;
@@ -565,6 +566,7 @@ enyo.kind({
 				}
 			}
 	},
+	*/
 	
 	_end: function(){
 		this.movementing = false;
