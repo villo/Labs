@@ -341,6 +341,8 @@ enyo.Book.transition({
 });
 
 //Add the "pageturn"
+//FIXME: Lower page shouldn't be transparent,
+//but I'm having z-sorting issues so this is an acceptable fix for now
 enyo.Book.transition({
 	name: "pageturn",
 	auto: true,
@@ -349,32 +351,26 @@ enyo.Book.transition({
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
-		before: {
-			"-webkit-transform-origin": "0% 50% 0",
-			"-moz-transform-origin": "0% 50% 0",
-			"-o-transform-origin": "0% 50% 0",
-			"-ms-transform-origin": "0% 50% 0"
-		},
 		next: {
 			from: {
-				opacity: 1,
+				opacity: 0,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "-1px"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "0px"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					rotateY: "-90deg",
-					translateZ: "1px"
+					translateX: "-50%",
+					scaleX: 0,
 				},
 			},
 		},
@@ -382,22 +378,22 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					rotateY: "-90deg",
-					translateZ: "1px"
+					translateX: "-50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "0px"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
-				opacity: 1,
+				opacity: 0,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "-1px"
+					translateX: "0%",
+					scaleX: 1,
 				},
 			},
 		},
