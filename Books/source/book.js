@@ -75,6 +75,8 @@ enyo.kind({
 				
 				t.duration = inSender.duration || 500;
 				
+				t.has3d = inSender.has3d || false;
+				
 				//enyo.Animator messes things up if the duration is 0, so we set it to 1 ms.
 				//NOTE: If you're using a 0ms transition, you're better off just setting before/after properties.
 				t.duration === 0 ? t.duration = 1 : "";
@@ -312,8 +314,6 @@ enyo.kind({
 	setTransition: function(inValue){
 		this.transition = inValue;
 		
-		enyo.log(this.transition);
-		enyo.log(enyo.dom.canAccelerate(), enyo.Book.transitions[this.transition].has3d);
 		//Check for hardware accelleration and switch to 3D transition if applicable
 		if(enyo.dom.canAccelerate() && enyo.Book.transitions[this.transition].has3d){
 			this.transition += "3d";
