@@ -108,7 +108,7 @@ enyo.kind({
 								}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-3).toLowerCase() === "deg"){
 									use = true;
 									end = "deg";
-								}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-1).toLowerCase() === "px"){
+								}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-2).toLowerCase() === "px"){
 									use = true;
 									end = "px";
 								}
@@ -219,7 +219,7 @@ enyo.kind({
 												end = "%";
 											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-3).toLowerCase() === "deg"){
 												end = "deg";
-											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-1).toLowerCase() === "px"){
+											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-2).toLowerCase() === "px"){
 												end = "px";
 											}
 											
@@ -241,7 +241,7 @@ enyo.kind({
 										end = "%";
 									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-3).toLowerCase() === "deg"){
 										end = "deg";
-									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-1).toLowerCase() === "px"){
+									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-2).toLowerCase() === "px"){
 										end = "px";
 									}
 									
