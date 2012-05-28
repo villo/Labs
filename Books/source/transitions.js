@@ -289,34 +289,28 @@ enyo.Book.transition({
 	directional: true,
 	has3d: true,
 	easing: enyo.easing.quadInOut,
-	duration: 600,
+	duration: 800,
 	transition: {
-		before: {
-			"-webkit-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
-			"-moz-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
-			"-o-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
-			"-ms-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px"
-		},
 		next: {
 			from: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "90deg"
+					translateX: "50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "0deg"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "-90deg"
+					translateX: "-50%",
+					scaleX: 0,
 				},
 			},
 		},
@@ -324,22 +318,22 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "-90deg",
+					translateX: "-50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "0deg",
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "90deg",
+					translateX: "50%",
+					scaleX: 0,
 				},
 			},
 		},
