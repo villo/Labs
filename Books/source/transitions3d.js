@@ -78,21 +78,21 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
+					translateZ: "-" + (window.innerWidth/2) + "px",
 					rotateY: "90deg"
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "-150px",
+					translateZ: "-" + (window.innerWidth/2) + "px",
 					rotateY: "0deg"
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
+					translateZ: "-" + (window.innerWidth/2) + "px",
 					rotateY: "-90deg"
 				},
 			},
@@ -101,21 +101,21 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
+					translateZ: "-" + (window.innerWidth/2) + "px",
 					rotateY: "-90deg",
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "-150px",
+					translateZ: "-" + (window.innerWidth/2) + "px",
 					rotateY: "0deg",
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
+					translateZ: "-" + (window.innerWidth/2) + "px",
 					rotateY: "90deg",
 				},
 			},
