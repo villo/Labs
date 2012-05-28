@@ -1,238 +1,11 @@
-//Add the "simple" transition:
+/* 3D Transition Definitions- DO NOT USE THESE.
+ * Their 2D equivalents will detect whether the host browser supports 3D transforms
+ * and switch accordingly.
+ */
+ 
+//Add the "hflip3d"
 enyo.Book.transition({
-	name: "simple",
-	auto: true,
-	duration: 1,
-	transition: {
-		//We don't need to apply any styles, as Books will automatically show/hide the pages.
-		visible: {},
-		hidden: {}
-	}
-});
-
-//Add the "fade" transition:
-enyo.Book.transition({
-	name: "fade",
-	auto: true,
-	duration: 500,
-	transition: {
-		visible: {
-			opacity: 1,
-		},
-		hidden: {
-			opacity: 0
-		}
-	}
-});
-
-//Add the "pop" transition:
-enyo.Book.transition({
-	name: "pop",
-	auto: true,
-	easing: enyo.easing.expoOut,
-	duration: 500,
-	transition: {
-		from: {
-			opacity: 0,
-			transform: {
-				scale: 0.7
-			}
-		},
-		visible: {
-			opacity: 1,
-			transform: {
-				scale: 1
-			}
-		},
-		out: {
-			opacity: 0,
-			transform: {
-				scale: 1.3
-			},
-		}
-	}
-});
-
-//Add the "slade"
-enyo.Book.transition({
-	name: "slade",
-	auto: true,
-	directional: true,
-	easing: enyo.easing.quadInOut,
-	duration: 500,
-	transition: {
-		next: {
-			from: {
-				opacity: 0,
-				transform: {
-					translateX: "50%",
-					translateZ: "0"
-				}
-			},
-			visible: {
-				opacity: 1,
-				transform: {
-					translateX: "0%",
-					translateZ: "0"
-				}
-			},
-			out: {
-				opacity: 0,
-				transform: {
-					translateX: "-50%",
-					translateZ: "0"
-				}
-			},
-		},
-		back: {
-			from: {
-				opacity: 0,
-				transform: {
-					translateX: "-50%",
-					translateZ: "0"
-				}
-			},
-			visible: {
-				opacity: 1,
-				transform: {
-					translateX: "0%",
-					translateZ: "0"
-				}
-			},
-			out: {
-				opacity: 0,
-				transform: {
-					translateX: "50%",
-					translateZ: "0"
-				}
-			},
-		}
-	}
-});
-
-//Add the "slide"
-enyo.Book.transition({
-	name: "slide",
-	auto: true,
-	directional: true,
-	easing: enyo.easing.quadInOut,
-	duration: 500,
-	transition: {
-		next: {
-			from: {
-				transform: {
-					translateX: "100%",
-					translateZ: "0"
-				}
-			},
-			visible: {
-				transform: {
-					translateX: "0%",
-					translateZ: "0"
-				}
-			},
-			out: {
-				transform: {
-					translateX: "-100%",
-					translateZ: "0"
-				}
-			},
-		},
-		back: {
-			from: {
-				transform: {
-					translateX: "-100%",
-					translateZ: "0"
-				}
-			},
-			visible: {
-				transform: {
-					translateX: "0%",
-					translateZ: "0"
-				}
-			},
-			out: {
-				transform: {
-					translateX: "100%",
-					translateZ: "0"
-				}
-			},
-		}
-	}
-});
-
-//Add "spoode" (spin/zoom/fade) transition:
-enyo.Book.transition({
-	name: "spoode",
-	auto: true,
-	duration: 500,
-	easing: enyo.easing.quadInOut,
-	directional: true,
-	transition: {
-		next: {
-			from: {
-				opacity: 0,
-				transform: {
-					translateX: "100%",
-					translateY: "100%",
-					rotate: "45deg",
-					scale: 0
-				}
-			},
-			visible: {
-				opacity: 1,
-				transform: {
-					translateX: "0%",
-					translateY: "0%",
-					rotate: "0deg",
-					scale: 1
-				}
-			},
-			out: {
-				opacity: 0,
-				transform: {
-					translateX: "-100%",
-					translateY: "-100%",
-					rotate: "-45deg",
-					scale: 2
-				}
-			}
-		},
-		back: {
-			from: {
-				opacity: 0,
-				transform: {
-					translateX: "-100%",
-					translateY: "-100%",
-					rotate: "-45deg",
-					scale: 2
-				}
-			},
-			visible: {
-				opacity: 1,
-				transform: {
-					translateX: "0%",
-					translateY: "0%",
-					rotate: "0deg",
-					scale: 1
-				}
-			},
-			out: {
-				opacity: 0,
-				transform: {
-					translateX: "100%",
-					translateY: "100%",
-					rotate: "45deg",
-					scale: 0
-				}
-			}
-		}
-	}
-});
-
-//Add the "hflip"
-enyo.Book.transition({
-	name: "hflip",
+	name: "hflip3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
@@ -287,9 +60,9 @@ enyo.Book.transition({
 	}
 });
 
-//Add the "boxturn"
+//Add the "boxturn3d"
 enyo.Book.transition({
-	name: "boxturn",
+	name: "boxturn3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
@@ -350,9 +123,9 @@ enyo.Book.transition({
 	}
 });
 
-//Add the "pageturn"
+//Add the "pageturn3d"
 enyo.Book.transition({
-	name: "pageturn",
+	name: "pageturn3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
@@ -413,9 +186,9 @@ enyo.Book.transition({
 	}
 });
 
-//Add the "pagespin"
+//Add the "pagespin3d"
 enyo.Book.transition({
-	name: "pagespin",
+	name: "pagespin3d",
 	auto: true,
 	directional: true,
 	easing: enyo.easing.quadInOut,
