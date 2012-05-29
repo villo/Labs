@@ -235,52 +235,47 @@ enyo.Book.transition({
 	name: "hflip",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
 		next: {
 			from: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "180deg",
+					scaleX: -1,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "0px",
-					rotateY: "0deg",
+					scaleX: 1,
 				}
 			},
 			out: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "-180deg",
+					scaleX: -1,
 				}
 			},
 		},
 		back: {
 			from: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "-180deg",
+					scaleX: -1,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "0px",
-					rotateY: "0deg",
+					scaleX: 1,
 				}
 			},
 			out: {
-				opacity: 0,
+				opacity: -1,
 				transform: {
-					translateZ: "-660px",
-					rotateY: "180deg",
+					scaleX: -1,
 				}
 			},
 		}
@@ -292,35 +287,30 @@ enyo.Book.transition({
 	name: "boxturn",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
-	duration: 600,
+	duration: 800,
 	transition: {
-		before: {
-			"-webkit-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
-			"-moz-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
-			"-o-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
-			"-ms-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px"
-		},
 		next: {
 			from: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "90deg"
+					translateX: "50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "0deg"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "-90deg"
+					translateX: "-50%",
+					scaleX: 0,
 				},
 			},
 		},
@@ -328,22 +318,22 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "-90deg",
+					translateX: "-50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "0deg",
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					translateZ: "-150px",
-					rotateY: "90deg",
+					translateX: "50%",
+					scaleX: 0,
 				},
 			},
 		},
@@ -351,39 +341,36 @@ enyo.Book.transition({
 });
 
 //Add the "pageturn"
+//FIXME: Lower page shouldn't be transparent,
+//but I'm having z-sorting issues so this is an acceptable fix for now
 enyo.Book.transition({
 	name: "pageturn",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
-		before: {
-			"-webkit-transform-origin": "0% 50% 0",
-			"-moz-transform-origin": "0% 50% 0",
-			"-o-transform-origin": "0% 50% 0",
-			"-ms-transform-origin": "0% 50% 0"
-		},
 		next: {
 			from: {
-				opacity: 1,
+				opacity: 0,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "-1px"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "0px"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					rotateY: "-90deg",
-					translateZ: "1px"
+					translateX: "-50%",
+					scaleX: 0,
 				},
 			},
 		},
@@ -391,22 +378,22 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					rotateY: "-90deg",
-					translateZ: "1px"
+					translateX: "-50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "0px"
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
-				opacity: 1,
+				opacity: 0,
 				transform: {
-					rotateY: "0deg",
-					translateZ: "-1px"
+					translateX: "0%",
+					scaleX: 1,
 				},
 			},
 		},
@@ -418,32 +405,30 @@ enyo.Book.transition({
 	name: "pagespin",
 	auto: true,
 	directional: true,
+	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
-		before: {
-			"-webkit-transform-origin": "0% 50% 0",
-			"-moz-transform-origin": "0% 50% 0",
-			"-o-transform-origin": "0% 50% 0",
-			"-ms-transform-origin": "0% 50% 0"
-		},
 		next: {
 			from: {
 				opacity: 0,
 				transform: {
-					rotateY: "90deg",
+					translateX: "-50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					rotateY: "0deg",
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					rotateY: "-90deg",
+					translateX: "-50%",
+					scaleX: 0,
 				},
 			},
 		},
@@ -451,19 +436,22 @@ enyo.Book.transition({
 			from: {
 				opacity: 0,
 				transform: {
-					rotateY: "-90deg",
+					translateX: "-50%",
+					scaleX: 0,
 				}
 			},
 			visible: {
 				opacity: 1,
 				transform: {
-					rotateY: "0deg",
+					translateX: "0%",
+					scaleX: 1,
 				}
 			},
 			out: {
 				opacity: 0,
 				transform: {
-					rotateY: "90deg",
+					translateX: "-50%",
+					scaleX: 0,
 				},
 			},
 		},
