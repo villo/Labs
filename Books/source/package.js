@@ -3,6 +3,5 @@ enyo.depends(
 	"book.js",
 	"page.js",
 	"transitions.js",
-	"transitions3d.js",
 	"book.css"
 );

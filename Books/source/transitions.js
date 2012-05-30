@@ -235,7 +235,6 @@ enyo.Book.transition({
 	name: "hflip",
 	auto: true,
 	directional: true,
-	has3d: true,
 	easing: enyo.easing.quadInOut,
 	duration: 800,
 	transition: {
@@ -276,6 +275,54 @@ enyo.Book.transition({
 				opacity: -1,
 				transform: {
 					scaleX: -1,
+				}
+			},
+		}
+	},
+	transition3D: {
+		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "180deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "0px",
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "-180deg",
+				}
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "-180deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "0px",
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-660px",
+					rotateY: "180deg",
 				}
 			},
 		}
@@ -334,6 +381,60 @@ enyo.Book.transition({
 				transform: {
 					translateX: "50%",
 					scaleX: 0,
+				},
+			},
+		},
+	},
+	transition3D: {
+		before: {
+			"-webkit-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
+			"-moz-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
+			"-o-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px",
+			"-ms-transform-origin": "50% 50% -" + (window.innerWidth/2) + "px"
+		},
+		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-" + (window.innerWidth/2) + "px",
+					rotateY: "90deg"
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "-" + (window.innerWidth/2) + "px",
+					rotateY: "0deg"
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-" + (window.innerWidth/2) + "px",
+					rotateY: "-90deg"
+				},
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					translateZ: "-" + (window.innerWidth/2) + "px",
+					rotateY: "-90deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					translateZ: "-" + (window.innerWidth/2) + "px",
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					translateZ: "-" + (window.innerWidth/2) + "px",
+					rotateY: "90deg",
 				},
 			},
 		},
@@ -397,6 +498,60 @@ enyo.Book.transition({
 				},
 			},
 		},
+	},
+	transition3D: {
+		before: {
+			"-webkit-transform-origin": "0% 50% 0",
+			"-moz-transform-origin": "0% 50% 0",
+			"-o-transform-origin": "0% 50% 0",
+			"-ms-transform-origin": "0% 50% 0"
+		},
+		next: {
+			from: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "-1px"
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "0px"
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+					translateZ: "1px"
+				},
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+					translateZ: "1px"
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "0px"
+				}
+			},
+			out: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+					translateZ: "-1px"
+				},
+			},
+		},
 	}
 });
 
@@ -452,6 +607,54 @@ enyo.Book.transition({
 				transform: {
 					translateX: "-50%",
 					scaleX: 0,
+				},
+			},
+		},
+	},
+	transition3D: {
+		before: {
+			"-webkit-transform-origin": "0% 50% 0",
+			"-moz-transform-origin": "0% 50% 0",
+			"-o-transform-origin": "0% 50% 0",
+			"-ms-transform-origin": "0% 50% 0"
+		},
+		next: {
+			from: {
+				opacity: 0,
+				transform: {
+					rotateY: "90deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+				},
+			},
+		},
+		back: {
+			from: {
+				opacity: 0,
+				transform: {
+					rotateY: "-90deg",
+				}
+			},
+			visible: {
+				opacity: 1,
+				transform: {
+					rotateY: "0deg",
+				}
+			},
+			out: {
+				opacity: 0,
+				transform: {
+					rotateY: "90deg",
 				},
 			},
 		},

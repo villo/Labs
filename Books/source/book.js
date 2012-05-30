@@ -29,9 +29,6 @@ enyo.kind({
 		//"fade", "slade", "slide", "spoode", "simple", "pop"
 		transition: "fade",
 		
-		//No longer used:
-		cue: false,
-		
 		//set to false if you don't want the content to be forced into absolute. 
 		//NOTE: if set to false, the "simple" transition will be used.
 		absolute: true
@@ -51,231 +48,251 @@ enyo.kind({
 		}
 	],
 	
-	statics: {
-		transitions: {},
-		//Add transition:
-		transition: function(inSender){
-			//Extract name: 
-			var name = inSender.name;
-			delete inSender.name;
-			if(!enyo.Book.transitions[name]){
-				var t = {};
-				
-				//Override Easing:
-				if(inSender.easing){
-					t.easing = inSender.easing;
-				}
-				
-				if(inSender.directional && inSender.directional === true){
-					t.directional = true;
-				}
-				
-				//Import transition properties:
+	processTransition: function(inSender){
+		var name = inSender.name;
+		delete inSender.name;
+		
+		if(!enyo.Book.transitions[name]){
+			var t = {};
+			
+			//Override Easing:
+			if(inSender.easing){
+				t.easing = inSender.easing;
+			}
+			
+			if(inSender.directional && inSender.directional === true){
+				t.directional = true;
+			}
+			
+			//Import transition properties, check for 3D animations:
+			//FIXME: enyo.dom.canAccelerate() can't be called until this is rendered!
+			if(enyo.dom.canAccelerate() && inSender.transition3D){
+				//Set to 3D animation:
+				t.transition = inSender.transition3D;
+			}else{
+				//Fallback:
 				t.transition = inSender.transition;
-				
-				t.duration = inSender.duration || 500;
-				
-				t.has3d = inSender.has3d || false;
-				
-				//enyo.Animator messes things up if the duration is 0, so we set it to 1 ms.
-				//NOTE: If you're using a 0ms transition, you're better off just setting before/after properties.
-				t.duration === 0 ? t.duration = 1 : "";
-				
-				//Make from/visible/out transitions easier for repeating properies:
-				if(t.transition.hidden){
-					t.transition.from = t.transition.hidden;
-					t.transition.out = t.transition.hidden;
-					delete t.transition.hidden;
-				}
-				
-				//Automatic step handling:
-				if(inSender.auto && inSender.auto === true){
-					//This is a base utility function which builds the differences between properties.
-					var buildDifferences = function(objV, objH){
-						var differences = {};
-						for(var x in objV){
-							if(objV.hasOwnProperty(x)){
-								if(x === "transform"){
-									differences.transform = buildDifferences(objV.transform, objH.transform);
-								}
-								//Parse for numbers, percents, degrees, and pixels:
-								var use = false;
-								var end = null;
-								if(typeof(objV[x]) === "number"){
-									use = true;
-									end = 0;
-								}else if(typeof(objV[x]) === "string" && objV[x].charAt(objV[x].length-1) === "%"){
-									use = true;
-									end = "%";
-								}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-3).toLowerCase() === "deg"){
-									use = true;
-									end = "deg";
-								}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-2).toLowerCase() === "px"){
-									use = true;
-									end = "px";
-								}
-								
-								if(use === true){
-									differences[x] = parseFloat(objV[x]) - parseFloat(objH[x]) + end;
-								}
-							}
-						}
-						return differences;
-					}
-						
+			}
+			
+			t.duration = inSender.duration || 500;
+			
+			//enyo.Animator messes things up if the duration is 0, so we set it to 1 ms.
+			t.duration === 0 ? t.duration = 1 : "";
+			
+			//Make from/visible/out transitions easier for repeating properies:
+			if(t.transition.hidden){
+				t.transition.from = t.transition.hidden;
+				t.transition.out = t.transition.hidden;
+				delete t.transition.hidden;
+			}
+			
+			//Automatic step handling:
+			if(inSender.auto && inSender.auto === true){
+				//This is a base utility function which builds the differences between properties.
+				var buildDifferences = function(objV, objH){
 					var differences = {};
-					if(t.directional){
-						differences = {
-							next: {
-								show: buildDifferences(t.transition.next.visible, t.transition.next.from),
-								hide: buildDifferences(t.transition.next.visible, t.transition.next.out)
-							},
-							back: {
-								show: buildDifferences(t.transition.back.visible, t.transition.back.from),
-								hide: buildDifferences(t.transition.back.visible, t.transition.back.out)
+					for(var x in objV){
+						if(objV.hasOwnProperty(x)){
+							if(x === "transform"){
+								differences.transform = buildDifferences(objV.transform, objH.transform);
 							}
-						}
-					}else{
-						differences = {
-							show: buildDifferences(t.transition.visible, t.transition.from),
-							hide: buildDifferences(t.transition.visible, t.transition.out)
+							//Parse for numbers, percents, degrees, and pixels:
+							var use = false;
+							var end = null;
+							if(typeof(objV[x]) === "number"){
+								use = true;
+								end = 0;
+							}else if(typeof(objV[x]) === "string" && objV[x].charAt(objV[x].length-1) === "%"){
+								use = true;
+								end = "%";
+							}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-3).toLowerCase() === "deg"){
+								use = true;
+								end = "deg";
+							}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-2).toLowerCase() === "px"){
+								use = true;
+								end = "px";
+							}
+							
+							if(use === true){
+								differences[x] = parseFloat(objV[x]) - parseFloat(objH[x]) + end;
+							}
 						}
 					}
-					t.before = function(controls){
-						if(t.transition.before){
-							var b = t.transition.before;
-							for(var x in b){
-								if(b.hasOwnProperty(x)){
-									if(x === "transform"){
-										var et = b[x];
-										for(var y in et){
-											if(et.hasOwnProperty(y)){
-												if(controls.show){
-													enyo.dom.transformValue(controls.show, y, et[y]);
-												}
-												if(controls.hide){
-													enyo.dom.transformValue(controls.hide, y, et[y]);
-												}
-											}
-										}
-									}else{
-										if(controls.show){
-											controls.show.applyStyle(x, b[x]);
-										}
-										if(controls.hide){
-											controls.hide.applyStyle(x, b[x]);
-										}
-									}
-								}
-							}
+					return differences;
+				}
+					
+				var differences = {};
+				if(t.directional){
+					differences = {
+						next: {
+							show: buildDifferences(t.transition.next.visible, t.transition.next.from),
+							hide: buildDifferences(t.transition.next.visible, t.transition.next.out)
+						},
+						back: {
+							show: buildDifferences(t.transition.back.visible, t.transition.back.from),
+							hide: buildDifferences(t.transition.back.visible, t.transition.back.out)
 						}
-					};
-					t.after = function(controls){
-						if(t.transition.after){
-							var a = t.transition.after;
-							for(var x in a){
-								if(a.hasOwnProperty(x)){
-									if(x === "transform"){
-										var et = a[x];
-										for(var y in et){
-											if(et.hasOwnProperty(y)){
-												if(controls.show){
-													enyo.dom.transformValue(controls.show, y, et[y]);
-												}
-												if(controls.hide){
-													enyo.dom.transformValue(controls.hide, y, et[y]);
-												}
-											}
-										}
-									}else{
-										if(controls.show){
-											controls.show.applyStyle(x, a[x]);
-										}
-										if(controls.hide){
-											controls.hide.applyStyle(x, a[x]);
-										}
-									}
-								}
-							}
-						}
-					};
-					t.step = function(controls, inSender, direction){
-						
-						//Direciton handling:
-						var diff = differences;
-						var moveThrough = t.transition;
-						if(t.directional){
-							diff = differences[direction];
-							moveThrough = t.transition[direction];
-						}
-						
-						for(var x in diff.show){
-							if(diff.show.hasOwnProperty(x)){
+					}
+				}else{
+					differences = {
+						show: buildDifferences(t.transition.visible, t.transition.from),
+						hide: buildDifferences(t.transition.visible, t.transition.out)
+					}
+				}
+				t.before = function(controls){
+					if(t.transition.before){
+						var b = t.transition.before;
+						for(var x in b){
+							if(b.hasOwnProperty(x)){
 								if(x === "transform"){
-									var d = diff.show[x];
-									for(var y in d){
-										if(d.hasOwnProperty(y)){
-											
-											var end = 0;
-											if(typeof(d[y]) === "string" && d[y].charAt(d[y].length-1) === "%"){
-												end = "%";
-											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-3).toLowerCase() === "deg"){
-												end = "deg";
-											}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-2).toLowerCase() === "px"){
-												end = "px";
-											}
-											
-											var show = (1 - inSender.value)*parseFloat(diff.show.transform[y]);
-											var hide = inSender.value*parseFloat(diff.hide.transform[y]);
-											
+									var et = b[x];
+									for(var y in et){
+										if(et.hasOwnProperty(y)){
 											if(controls.show){
-												enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (end));
+												enyo.dom.transformValue(controls.show, y, et[y]);
 											}
 											if(controls.hide){
-												enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (end));
+												enyo.dom.transformValue(controls.hide, y, et[y]);
 											}
 										}
 									}
 								}else{
-									
-									var end = 0;
-									if(typeof(diff.show[x]) === "string" && diff.show[x].charAt(diff.show[x].length-1) === "%"){
-										end = "%";
-									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-3).toLowerCase() === "deg"){
-										end = "deg";
-									}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-2).toLowerCase() === "px"){
-										end = "px";
-									}
-									
-									var show = (1 - inSender.value)*parseFloat(diff.show[x]);
-									var hide = inSender.value*parseFloat(diff.hide[x]);
-									
 									if(controls.show){
-										controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (end));
+										controls.show.applyStyle(x, b[x]);
 									}
 									if(controls.hide){
-										controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (end));
+										controls.hide.applyStyle(x, b[x]);
 									}
 								}
 							}
 						}
-					};
-				}else{
-					t.step = inSender.step;
-				}
+					}
+				};
 				
-				enyo.Book.transitions[name] = t;
+				t.after = function(controls){
+					if(t.transition.after){
+						var a = t.transition.after;
+						for(var x in a){
+							if(a.hasOwnProperty(x)){
+								if(x === "transform"){
+									var et = a[x];
+									for(var y in et){
+										if(et.hasOwnProperty(y)){
+											if(controls.show){
+												enyo.dom.transformValue(controls.show, y, et[y]);
+											}
+											if(controls.hide){
+												enyo.dom.transformValue(controls.hide, y, et[y]);
+											}
+										}
+									}
+								}else{
+									if(controls.show){
+										controls.show.applyStyle(x, a[x]);
+									}
+									if(controls.hide){
+										controls.hide.applyStyle(x, a[x]);
+									}
+								}
+							}
+						}
+					}
+				};
+				
+				t.step = function(controls, inSender, direction){
+					
+					//Direciton handling:
+					var diff = differences;
+					var moveThrough = t.transition;
+					if(t.directional){
+						diff = differences[direction];
+						moveThrough = t.transition[direction];
+					}
+					
+					for(var x in diff.show){
+						if(diff.show.hasOwnProperty(x)){
+							if(x === "transform"){
+								var d = diff.show[x];
+								for(var y in d){
+									if(d.hasOwnProperty(y)){
+										
+										var end = 0;
+										if(typeof(d[y]) === "string" && d[y].charAt(d[y].length-1) === "%"){
+											end = "%";
+										}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-3).toLowerCase() === "deg"){
+											end = "deg";
+										}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-2).toLowerCase() === "px"){
+											end = "px";
+										}
+										
+										var show = (1 - inSender.value)*parseFloat(diff.show.transform[y]);
+										var hide = inSender.value*parseFloat(diff.hide.transform[y]);
+										
+										if(controls.show){
+											enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (end));
+										}
+										if(controls.hide){
+											enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (end));
+										}
+									}
+								}
+							}else{
+								
+								var end = 0;
+								if(typeof(diff.show[x]) === "string" && diff.show[x].charAt(diff.show[x].length-1) === "%"){
+									end = "%";
+								}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-3).toLowerCase() === "deg"){
+									end = "deg";
+								}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-2).toLowerCase() === "px"){
+									end = "px";
+								}
+								
+								var show = (1 - inSender.value)*parseFloat(diff.show[x]);
+								var hide = inSender.value*parseFloat(diff.hide[x]);
+								
+								if(controls.show){
+									controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (end));
+								}
+								if(controls.hide){
+									controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (end));
+								}
+							}
+						}
+					}
+				};
+			}else{
+				t.step = inSender.step;
+			}
+			
+			enyo.Book.transitions[name] = t;
+		}else{
+			return false;
+		}
+	},
+	
+	statics: {
+		//Unprocessed transitions:
+		_transitions: {},
+		//Processed transitions:
+		transitions: {},
+		//Add transition:
+		transition: function(inSender){	
+			if(!enyo.Book._transitions[inSender.name]){
+				//To process:
+				enyo.Book._transitions[inSender.name] = inSender;
 			}else{
 				return false;
 			}
 		}
 	},
 	
-	// Same thing as transitioning, but a level up.
+	//Prevents animations from occuring concurrently:
 	movementing: false,
 	
 	//Transition direction ("back", "next")
 	direction: "next",
+	
+	//Use pages!
 	defaultKind: "Page",
 	
 	create: function(){
@@ -305,19 +322,18 @@ enyo.kind({
 	
 	rendered: function(){
 		this.inherited(arguments);
+		
+		//Process Transitions: 
+		for(var x in enyo.Book._transitions){
+			this.processTransition(enyo.Book._transitions[x]);
+			delete enyo.Book._transitions[x];
+		}
+		
+		//Show first pane, no pane to hide:
 		this.startAnimation({
 			show: 0,
 			hide: false
 		});
-	},
-	
-	setTransition: function(inValue){
-		this.transition = inValue;
-		
-		//Check for hardware accelleration and switch to 3D transition if applicable
-		if(enyo.dom.canAccelerate() && enyo.Book.transitions[this.transition].has3d){
-			this.transition += "3d";
-		}
 	},
 	
 	startAnimation: function(panes){
@@ -405,6 +421,62 @@ enyo.kind({
 		this.components = c;
 		this.inherited(arguments);
 	},
+	
+	_paneIsLazy: function(name){
+		var lazy = false;
+		for(x in this.lazy){
+			if(this.lazy.hasOwnProperty(x)){
+				if(this.lazy[x].name === name){
+					lazy = true;
+				}
+			}
+		}
+		return lazy;
+	},
+	_getLazyPane: function(name){
+		var lazy = [];
+		for(x in this.lazy){
+			if(this.lazy.hasOwnProperty(x)){
+				if(this.lazy[x].name === name){
+					lazy = this.lazy[x];
+				}
+			}
+		}
+		return lazy;
+	},
+	_deleteLazyPane: function(name){
+		for(x in this.lazy){
+			if(this.lazy.hasOwnProperty(x)){
+				if(this.lazy[x].name === name){
+					delete this.lazy[x];
+				}
+			}
+		}
+		return true;
+	},
+	_getPageNumber: function(name){
+		var number = null;
+		for(x in this.getControls()){
+			if(this.getControls().hasOwnProperty(x)){
+				if(this.getControls()[x].name === name){
+					number = x;
+				}
+			}
+		}
+		return parseInt(number);
+	},
+	
+	_end: function(){
+		this.movementing = false;
+	},
+	
+	/*
+	 * ================
+	 * PUBLIC FUNCTIONS
+	 * ================
+	 * 
+	 */
+	
 	pageNumber: function(number){
 		//Adjust to array-friendly numbers:
 		number = number-1;
@@ -488,98 +560,5 @@ enyo.kind({
 				return false;
 			}
 		}
-	},
-	
-	_paneIsLazy: function(name){
-		var lazy = false;
-		for(x in this.lazy){
-			if(this.lazy.hasOwnProperty(x)){
-				if(this.lazy[x].name === name){
-					lazy = true;
-				}
-			}
-		}
-		return lazy;
-	},
-	_getLazyPane: function(name){
-		var lazy = [];
-		for(x in this.lazy){
-			if(this.lazy.hasOwnProperty(x)){
-				if(this.lazy[x].name === name){
-					lazy = this.lazy[x];
-				}
-			}
-		}
-		return lazy;
-	},
-	_deleteLazyPane: function(name){
-		for(x in this.lazy){
-			if(this.lazy.hasOwnProperty(x)){
-				if(this.lazy[x].name === name){
-					delete this.lazy[x];
-				}
-			}
-		}
-		return true;
-	},
-	_getPageNumber: function(name){
-		var number = null;
-		for(x in this.getControls()){
-			if(this.getControls().hasOwnProperty(x)){
-				if(this.getControls()[x].name === name){
-					number = x;
-				}
-			}
-		}
-		return parseInt(number);
-	},
-	
-	//Core utility show and hide functions
-	/* Are these required with the new animation system? Seems unnecessary to keep them.
-	_showPane: function(number, history, index){
-		if(typeof(number) === "object"){
-			var index = number.index;
-			var history = number.history;
-			var number = number.number;
-		}
-			
-			var c = this.getControls()[number];
-			
-			c.show();
-			if(this.transition != "slade"){
-				c.addClass("enyo-book-" + this.transition + "-in");
-			}else{
-				if(this.direction == "next"){
-					c.addClass("enyo-book-sladenext-in");
-				}else{
-					c.addClass("enyo-book-sladeback-in");
-				}
-			}
-			
-			this.pane = number;
-			if(history !== true){
-				this.history.push(this.pane);
-				this.historyPane = this.history.length-1;
-			}else{
-				this.historyPane = index;
-			}
-	},
-	_hidePane: function(number){
-				
-			var c = this.getControls()[number];
-			if(this.transition != "slade"){
-				c.addClass("enyo-book-" + this.transition + "-out");
-			}else{
-				if(this.direction == "next"){
-					c.addClass("enyo-book-sladenext-out");
-				}else{
-					c.addClass("enyo-book-sladeback-out");
-				}
-			}
-	},
-	*/
-	
-	_end: function(){
-		this.movementing = false;
 	}
 });
