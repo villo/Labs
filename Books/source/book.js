@@ -22,51 +22,294 @@
 
 
 enyo.kind({
-	name: "Book",
+	name: "enyo.Book",
 	kind: "Control",
+	classes: "enyo-book",
 	published: {
-		//"fade", "slade", "simple", "pop"
+		//"fade", "slade", "slide", "spoode", "simple", "pop"
 		transition: "fade",
-		//allow for an action cue that processes input while still animating. This also makes animations go one at a time.
-		cue: false,
+		
 		//set to false if you don't want the content to be forced into absolute. 
 		//NOTE: if set to false, the "simple" transition will be used.
 		absolute: true
 	},
-	transitions: {
-		//Timing for transition properties.
-		"simple": 0,
-		"fade": 500,
-		"slade": 500,
-		"pop": 500
+	components: [
+		//The animator kind which steps through animations:
+		{
+			kind: "enyo.Animator",
+			easingFunction: enyo.easing.linear,
+			//We give this long name so as not to get it mixed up with pages:
+			name: "theAnimationMachineForBook",
+			startValue: 0,
+			endValue: 1,
+			duration: 500,
+			onStep: "handleAnimationStep",
+			onEnd: "handleAnimationEnd"
+		}
+	],
+	
+	processTransition: function(inSender){
+		var name = inSender.name;
+		delete inSender.name;
+		
+		if(!enyo.Book.transitions[name]){
+			var t = {};
+			
+			//Override Easing:
+			if(inSender.easing){
+				t.easing = inSender.easing;
+			}
+			
+			if(inSender.directional && inSender.directional === true){
+				t.directional = true;
+			}
+			
+			//Import transition properties, check for 3D animations:
+			//FIXME: enyo.dom.canAccelerate() can't be called until this is rendered!
+			if(enyo.dom.canAccelerate() && inSender.transition3D){
+				//Set to 3D animation:
+				t.transition = inSender.transition3D;
+			}else{
+				//Fallback:
+				t.transition = inSender.transition;
+			}
+			
+			t.duration = inSender.duration || 500;
+			
+			//enyo.Animator messes things up if the duration is 0, so we set it to 1 ms.
+			t.duration === 0 ? t.duration = 1 : "";
+			
+			//Make from/visible/out transitions easier for repeating properies:
+			if(t.transition.hidden){
+				t.transition.from = t.transition.hidden;
+				t.transition.out = t.transition.hidden;
+				delete t.transition.hidden;
+			}
+			
+			//Automatic step handling:
+			if(inSender.auto && inSender.auto === true){
+				//This is a base utility function which builds the differences between properties.
+				var buildDifferences = function(objV, objH){
+					var differences = {};
+					for(var x in objV){
+						if(objV.hasOwnProperty(x)){
+							if(x === "transform"){
+								differences.transform = buildDifferences(objV.transform, objH.transform);
+							}
+							//Parse for numbers, percents, degrees, and pixels:
+							var use = false;
+							var end = null;
+							if(typeof(objV[x]) === "number"){
+								use = true;
+								end = 0;
+							}else if(typeof(objV[x]) === "string" && objV[x].charAt(objV[x].length-1) === "%"){
+								use = true;
+								end = "%";
+							}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-3).toLowerCase() === "deg"){
+								use = true;
+								end = "deg";
+							}else if(typeof(objV[x]) === "string" && objV[x].substring(objV[x].length-2).toLowerCase() === "px"){
+								use = true;
+								end = "px";
+							}
+							
+							if(use === true){
+								differences[x] = parseFloat(objV[x]) - parseFloat(objH[x]) + end;
+							}
+						}
+					}
+					return differences;
+				}
+					
+				var differences = {};
+				if(t.directional){
+					differences = {
+						next: {
+							show: buildDifferences(t.transition.next.visible, t.transition.next.from),
+							hide: buildDifferences(t.transition.next.visible, t.transition.next.out)
+						},
+						back: {
+							show: buildDifferences(t.transition.back.visible, t.transition.back.from),
+							hide: buildDifferences(t.transition.back.visible, t.transition.back.out)
+						}
+					}
+				}else{
+					differences = {
+						show: buildDifferences(t.transition.visible, t.transition.from),
+						hide: buildDifferences(t.transition.visible, t.transition.out)
+					}
+				}
+				t.before = function(controls){
+					if(t.transition.before){
+						var b = t.transition.before;
+						for(var x in b){
+							if(b.hasOwnProperty(x)){
+								if(x === "transform"){
+									var et = b[x];
+									for(var y in et){
+										if(et.hasOwnProperty(y)){
+											if(controls.show){
+												enyo.dom.transformValue(controls.show, y, et[y]);
+											}
+											if(controls.hide){
+												enyo.dom.transformValue(controls.hide, y, et[y]);
+											}
+										}
+									}
+								}else{
+									if(controls.show){
+										controls.show.applyStyle(x, b[x]);
+									}
+									if(controls.hide){
+										controls.hide.applyStyle(x, b[x]);
+									}
+								}
+							}
+						}
+					}
+				};
+				
+				t.after = function(controls){
+					if(t.transition.after){
+						var a = t.transition.after;
+						for(var x in a){
+							if(a.hasOwnProperty(x)){
+								if(x === "transform"){
+									var et = a[x];
+									for(var y in et){
+										if(et.hasOwnProperty(y)){
+											if(controls.show){
+												enyo.dom.transformValue(controls.show, y, et[y]);
+											}
+											if(controls.hide){
+												enyo.dom.transformValue(controls.hide, y, et[y]);
+											}
+										}
+									}
+								}else{
+									if(controls.show){
+										controls.show.applyStyle(x, a[x]);
+									}
+									if(controls.hide){
+										controls.hide.applyStyle(x, a[x]);
+									}
+								}
+							}
+						}
+					}
+				};
+				
+				t.step = function(controls, inSender, direction){
+					
+					//Direciton handling:
+					var diff = differences;
+					var moveThrough = t.transition;
+					if(t.directional){
+						diff = differences[direction];
+						moveThrough = t.transition[direction];
+					}
+					
+					for(var x in diff.show){
+						if(diff.show.hasOwnProperty(x)){
+							if(x === "transform"){
+								var d = diff.show[x];
+								for(var y in d){
+									if(d.hasOwnProperty(y)){
+										
+										var end = 0;
+										if(typeof(d[y]) === "string" && d[y].charAt(d[y].length-1) === "%"){
+											end = "%";
+										}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-3).toLowerCase() === "deg"){
+											end = "deg";
+										}else if(typeof(d[y]) === "string" && d[y].substring(d[y].length-2).toLowerCase() === "px"){
+											end = "px";
+										}
+										
+										var show = (1 - inSender.value)*parseFloat(diff.show.transform[y]);
+										var hide = inSender.value*parseFloat(diff.hide.transform[y]);
+										
+										if(controls.show){
+											enyo.dom.transformValue(controls.show, y, parseFloat(moveThrough.visible.transform[y]) - show + (end));
+										}
+										if(controls.hide){
+											enyo.dom.transformValue(controls.hide, y, parseFloat(moveThrough.visible.transform[y]) - hide + (end));
+										}
+									}
+								}
+							}else{
+								
+								var end = 0;
+								if(typeof(diff.show[x]) === "string" && diff.show[x].charAt(diff.show[x].length-1) === "%"){
+									end = "%";
+								}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-3).toLowerCase() === "deg"){
+									end = "deg";
+								}else if(typeof(diff.show[x]) === "string" && diff.show[x].substring(diff.show[x].length-2).toLowerCase() === "px"){
+									end = "px";
+								}
+								
+								var show = (1 - inSender.value)*parseFloat(diff.show[x]);
+								var hide = inSender.value*parseFloat(diff.hide[x]);
+								
+								if(controls.show){
+									controls.show.applyStyle(x, parseFloat(moveThrough.visible[x]) - show + (end));
+								}
+								if(controls.hide){
+									controls.hide.applyStyle(x, parseFloat(moveThrough.visible[x]) - hide + (end));
+								}
+							}
+						}
+					}
+				};
+			}else{
+				t.step = inSender.step;
+			}
+			
+			enyo.Book.transitions[name] = t;
+		}else{
+			return false;
+		}
 	},
-	/*
-	 * cue lets you "fade through black" with transitions, so that they don't occur on top of each other.
-	 */
-	transitioning: false,
-	/*
-	 * Same thing as transitioning, but a level up.
-	 */
+	
+	statics: {
+		//Unprocessed transitions:
+		_transitions: {},
+		//Processed transitions:
+		transitions: {},
+		//Add transition:
+		transition: function(inSender){	
+			if(!enyo.Book._transitions[inSender.name]){
+				//To process:
+				enyo.Book._transitions[inSender.name] = inSender;
+			}else{
+				return false;
+			}
+		}
+	},
+	
+	//Prevents animations from occuring concurrently:
 	movementing: false,
-	/*
-	 * Transition direction for slade
-	 * "back", "next"
-	 */
+	
+	//Transition direction ("back", "next")
 	direction: "next",
+	
+	//Use pages!
 	defaultKind: "Page",
+	
 	create: function(){
 		if(this.absolute === false){
 			//Swap for controls.
 			this.defaultKind = "Control";
-			this.transition = "simple";
+			this.setTransition("simple");
 		}
 		
 		this.setOwner = this.owner;
 		this.pane = null;
 		this.lazy = [];
-		//OP
+		
 		this.history = [];
 		this.historyPane = null;
+		
+		//Inherit:
 		this.inherited(arguments);
 		
 		// Make all of the Pages invisible to start out with.
@@ -79,7 +322,82 @@ enyo.kind({
 	
 	rendered: function(){
 		this.inherited(arguments);
-		this._showPane(0, true);
+		
+		//Process Transitions: 
+		for(var x in enyo.Book._transitions){
+			this.processTransition(enyo.Book._transitions[x]);
+			delete enyo.Book._transitions[x];
+		}
+		
+		//Show first pane, no pane to hide:
+		this.startAnimation({
+			show: 0,
+			hide: false
+		});
+	},
+	
+	startAnimation: function(panes){
+		//We are moving:
+		this.movementing = true;
+		
+		var c = this.getControls();
+		this._showingPane = c[panes.show];
+		this._hidingPane = c[panes.hide];
+		
+		if(panes.disableHistory && panes.disableHistory === true){
+			//No history
+			this.historyPane = panes.index;
+		}else{
+			this.history.push(parseInt(panes.show));
+			this.historyPane = this.history.length - 1;
+		}
+		
+		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
+		
+		this.$.theAnimationMachineForBook.setEasingFunction(t.easing || enyo.easing.linear);
+		
+		this.$.theAnimationMachineForBook.setDuration(t.duration || 500);
+		
+		this._showingPane ? this._showingPane.show() : "";
+		this._hidingPane ? this._hidingPane.show(): "";
+		
+		this.pane = panes.show;
+		
+		t.before({
+			show: this._showingPane,
+			hide: this._hidingPane
+		});
+		
+		this.$.theAnimationMachineForBook.play();
+	},
+	
+	handleAnimationStep: function(inSender){
+		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
+		t.step({
+			show: this._showingPane,
+			hide: this._hidingPane
+		}, inSender, this.direction);
+	},
+	
+	handleAnimationEnd: function(){
+		
+		//This resets the styles applied to the element, so as to clear up the residue from animations.
+		
+		this._showingPane ? this._showingPane.domStyles = [] : "";
+		this._showingPane ? this._showingPane.domStylesChanged() : "";
+		
+		this._hidingPane ? this._hidingPane.domStyles = [] : "";
+		this._hidingPane ? this._hidingPane.domStylesChanged() : "";
+		
+		this._hidingPane ? this._hidingPane.hide() : "";
+		
+		var t = enyo.Book.transitions[this.transition] || enyo.Book.transitions.fade;
+		t.after({
+			show: this._showingPane,
+			hide: this._hidingPane
+		})
+		
+		this._end();
 	},
 	
 	initComponents: function(){
@@ -95,106 +413,13 @@ enyo.kind({
 					c.push(this.components[x]);
 				}
 				
-				if(this.absolute === false){
-					if(this.components[x].absolute = false);
-				}
+				//if(this.absolute === false){
+				//if(this.components[x].absolute = false);
+				//}
 			}
 		}
 		this.components = c;
 		this.inherited(arguments);
-	},
-	pageNumber: function(number){
-		if(this.pane < number) {
-			this.direction = "next";
-		}else{
-			this.direction = "back";
-		}
-		if(this.pane !== number){
-			if(this.movementing){
-				if(this.cue){
-					this._cue({
-						"action": "pageNumber",
-						"arguments": number
-					});
-				}
-			}else{
-				this.movementing = true;
-				this._hidePane(this.pane);
-				this._showPane(number);
-			}
-		}
-	},
-	pageName: function(name){
-		if(this.pane < this._getPageNumber(name)) {
-			this.direction = "next";
-		}else{
-			this.direction = "back";
-		}
-		if(this.movementing){
-			if(this.cue){
-				this._cue.push({
-					"action": "pageName",
-					"arguments": name
-				});
-			}
-		}else{
-			this.movementing = true;
-			/*
-			 * Check for lazy pages.
-			 */
-			if(this._paneIsLazy(name)){
-				//Check for already rendered lazy views
-				this._hidePane(this.pane);
-				this.createComponent(this._getLazyPane(name), {owner: this.owner});
-				this.getControls()[this._getPageNumber(name)].render();
-				this._showPane(this._getPageNumber(name));
-				this._deleteLazyPane(name);
-			}else{
-				if(this.pane !== this._getPageNumber(name)){
-					this._hidePane(this.pane);
-					this._showPane(this._getPageNumber(name));
-				}else{
-					this._end();
-				}
-			}
-		}
-	},
-	
-	back: function(){
-		this.direction = "back";
-		if(this.movementing){
-			if(this.cue){
-				this._cue.push({
-					"action": "back",
-					"arguments": ""
-				});
-			}
-		}else{
-			if(this.history[this.historyPane-1]){
-				this._hidePane(this.pane);
-				this._showPane(this.history[this.historyPane-1], true, this.historyPane-1);
-			}else{
-				return false;
-			}
-		}
-	},
-	next: function(){
-		this.direction = "next";
-		if(this.movementing){
-			if(this.cue){
-				this._cue.push({
-					"action": "next",
-					"arguments": ""
-				});
-			}
-		}else{
-			if(this.history[this.historyPane+1]){
-				this._hidePane(this.pane);
-				this._showPane(this.history[this.historyPane+1], true, this.historyPane+1);
-			}else{
-				return false;
-			}
-		}
 	},
 	
 	_paneIsLazy: function(name){
@@ -238,114 +463,102 @@ enyo.kind({
 				}
 			}
 		}
-		return number;
-	},
-	
-	//Set up the cue, which we can use to push actions that we need to delay.
-	_cue: [],
-	
-	//Core utility show and hide functions
-	_showPane: function(number, history, index){
-		//Extract from cued functions:
-		if(typeof(number) === "object"){
-			var index = number.index;
-			var history = number.history;
-			var number = number.number;
-		}
-		if(this.transitioning){
-			this._cue.push({
-				"action": "_showPane", 
-				"arguments": {
-					"number": number,
-					"history": history || "",
-					 "index": index || ""
-				}
-			});
-		}else{
-			if(this.cue)
-				this.transitioning = true;
-				
-			var c = this.getControls()[number];
-			c.show();
-			if(this.transition != "slade"){
-				c.addClass("enyo-book-" + this.transition + "-in");
-			}else{
-				if(this.direction == "next"){
-					c.addClass("enyo-book-sladenext-in");
-				}else{
-					c.addClass("enyo-book-sladeback-in");
-				}
-			}
-			
-			this.pane = number;
-			if(history !== true){
-				this.history.push(this.pane);
-				this.historyPane = this.history.length-1;
-			}else{
-				this.historyPane = index;
-			}
-			
-			window.setTimeout(enyo.bind(this, function(){
-				c.show();
-				if(this.transition != "slade"){
-					c.removeClass("enyo-book-" + this.transition + "-in");
-				}else{
-					if(this.direction == "next"){
-						c.removeClass("enyo-book-sladenext-in");
-					}else{
-						c.removeClass("enyo-book-sladeback-in");
-					}
-				}
-				this._end();
-			}), this.transitions[this.transition]);
-		}
-	},
-	_hidePane: function(number){
-		if(this.transitioning){
-			this._cue.push({"action": "_hidePane", "arguments": number});
-		}else{
-			if(this.cue)
-				this.transitioning = true;
-				
-			var c = this.getControls()[number];
-			if(this.transition != "slade"){
-				c.addClass("enyo-book-" + this.transition + "-out");
-			}else{
-				if(this.direction == "next"){
-					c.addClass("enyo-book-sladenext-out");
-				}else{
-					c.addClass("enyo-book-sladeback-out");
-				}
-			}
-			
-			window.setTimeout(enyo.bind(this, function(){
-				c.hide();
-				if(this.transition != "slade"){
-					c.removeClass("enyo-book-" + this.transition + "-out");
-				}else{
-					if(this.direction == "next"){
-						c.removeClass("enyo-book-sladenext-out");
-					}else{
-						c.removeClass("enyo-book-sladeback-out");
-					}
-				}
-				this._end();
-			}), this.transitions[this.transition]);
-		}
+		return parseInt(number);
 	},
 	
 	_end: function(){
 		this.movementing = false;
-		this.transitioning = false;
-		this._startCue();
 	},
 	
-	_startCue: function(){
-		if(this._cue.length >= 1){
-			var action = this._cue[0].action;
-			var args = this._cue[0].arguments;
-			this._cue.splice(0, 1)
-			this[action](args);
+	/*
+	 * ================
+	 * PUBLIC FUNCTIONS
+	 * ================
+	 * 
+	 */
+	
+	pageNumber: function(number){
+		//Adjust to array-friendly numbers:
+		number = number-1;
+		
+		if(this.pane < number) {
+			this.direction = "next";
+		}else{
+			this.direction = "back";
+		}
+		
+		if(this.pane !== number){
+			if(this.movementing){
+				
+			}else{	
+				this.startAnimation({"show": number, "hide": this.pane});
+			}
+		}
+	},
+	pageName: function(name){
+		//Establish Direction:
+		if(this.pane < this._getPageNumber(name)) {
+			this.direction = "next";
+		}else{
+			this.direction = "back";
+		}
+		
+		if(this.movementing){
+			//Do nothing.
+		}else{
+			if(this._paneIsLazy(name)){
+				//Check for already rendered lazy views
+				this.createComponent(this._getLazyPane(name), {owner: this.owner}).render();
+				this.startAnimation({
+					show: this._getPageNumber(name),
+					hide: this.pane
+				})
+				this._deleteLazyPane(name);
+			}else{
+				if(this.pane !== this._getPageNumber(name)){
+					this.startAnimation({
+						"show": this._getPageNumber(name), 
+						"hide": this.pane
+					});
+				}else{
+					this._end();
+				}
+			}
+		}
+	},
+	
+	back: function(){
+		this.direction = "back";
+		if(this.movementing){
+			
+		}else{
+			if(typeof(this.history[this.historyPane-1]) === "number"){
+				this.startAnimation({
+					show: this.history[this.historyPane-1], 
+					hide: this.pane,
+					disableHistory: true,
+					index: this.historyPane-1
+				});
+			}else{
+				return false;
+			}
+		}
+	},
+	next: function(){
+		this.direction = "next";
+		if(this.movementing){
+			
+		}else{
+			if(typeof(this.history[this.historyPane+1]) === "number"){
+				this.startAnimation({
+					show: this.history[this.historyPane+1], 
+					hide: this.pane,
+					disableHistory: true,
+					index: this.historyPane+1
+				});
+			}else{
+				return false;
+			}
 		}
 	}
 });
